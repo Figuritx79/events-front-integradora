@@ -1,11 +1,15 @@
 import { Camera } from 'lucide-react';
+import { Button } from '@heroui/react';
 function App() {
 
   return (
-    < >
-      <h1 className='flex justify-center items-center h-screen text-emerald-500'>Hello integradora</h1>
-      <Camera color="black" size={100} />
-    </>
+    <div className='flex justify-center items-center h-screen flex-col'>
+      <h1 >Hello integradora</h1>
+      <Button color='secondary'>
+        Hello
+      </Button>
+
+    </div>
   )
 }
 
