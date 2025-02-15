@@ -11,6 +11,7 @@ Proyecto integrador del 5to cuatrimestre
 * [Prerrequisitos](#prerrequisitos)
 * [Instalacion, configuracion y ejecucions](#iniciar-proyecto)
 * [Trabajar con git](#trabajar-con-git)
+* [Estructura de proyecto](#estructura-del-proyecto)
 * [Librerias/dependencias](#libreriasdependencias)
 * [Extenciones recomendas](#extensiones-recomendadas)
 
@@ -92,18 +93,41 @@ Cuando tus cambios esten arriba en tu rama, deberar realizar una [**Pull request
 <!-- Falta completar -->
 
 
+
+# Estructura del proyecto
+```bash
+src/
+└── modules/
+    ├── admin/
+    │   ├── components/
+    │   ├── pages/
+    ├── adminEvents/
+    │   ├── components/
+    │   ├── pages/
+    ├── auth/
+    │   ├── components/
+    │   ├── pages/
+    ├── events/
+        ├── components/
+        ├── pages/
+```
+Esta sera la estructura que seguira el proyecto, se parace bastante a la que ocupamos en back. Partimos de la carpeta src donde tendremo el codigo fuente, dentro de **src** tenemos la carpeta modules(esta carpeta representa los modulos del proyecto o caracteristicas) y dentro tenemos las caracteristicas del proyecto com adminEventos, auth(autenticacion),etc cada una cuenta con su apartado de componentes,etc . Esto es para tener bien estrucuturado el proyecto. Si llegamos a tener otro modulo o caractistica tendremos que crear otra carpeta con el nombre del modulo junto con sus carpetas correspondientes.
+
+**Si falta algun modulo por favor decirlo y lo agregamos.**
+>[!IMPORTANT]
+> Faltan algunas carpetas dentro de cada modulo, solo puse las principales o las que me acorde
+>[!NOTE]
+> Dentro de algunas carpetas encontraras un archivo example.jsx. No es importante, si quieres reenombralo esta bien
+
 # Librerias/Dependencias
 >[!NOTE]
 > Si hay otra dependencia que nos pueda servir, favor de comentarlo :smiley_cat: 
-
-
 
 * React
 * Lucid
 * Heroui/Nextui
 * Tailwind css
-
-
+* React router
 
 # Extensiones recomendadas
 * [Quokka.js](https://marketplace.visualstudio.com/items?itemName=WallabyJs.quokka-vscode)
