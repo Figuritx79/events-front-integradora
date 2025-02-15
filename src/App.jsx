@@ -1,4 +1,3 @@
-import { Camera } from 'lucide-react';
 import { Button } from '@heroui/react';
 function App() {
 
