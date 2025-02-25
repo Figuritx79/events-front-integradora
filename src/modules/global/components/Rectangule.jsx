@@ -1,6 +1,6 @@
 function Rectangule() {
   return (
-    <div className="absolute bottom-0 right-0 ">
+    <div className="absolute bottom-0 right-0  ">
       <svg
         width="1280"
         height="174"
