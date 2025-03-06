@@ -1,9 +1,10 @@
 function Rectangule() {
   return (
-    <div className="absolute bottom-0 right-0  ">
+    <div className="absolute    bottom-0 w-full z-[-1] mt-16">
+
       <svg
         width="1280"
-        height="174"
+        height="110"
         viewBox="0 0 1280 174"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

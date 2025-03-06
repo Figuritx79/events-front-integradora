@@ -5,7 +5,7 @@ import {
   NavbarContent,
   NavbarItem,
 } from "@heroui/react";
-import { Logo } from "../components/Logo";
+import { Logo } from "../../global/components/Logo";
 import { Footer } from "../components/Footer";
 import { Link } from "react-router";
 import Rectangule from "../components/Rectangule";
@@ -13,7 +13,7 @@ export const GlobalLayout = ({ children }) => {
   return (
     <div className="bg-[#0D0D0D]">
       {/* HEADER */}
-      <Navbar className="bg-[rgba(29, 22, 29, 0.4)]">
+      <Navbar className="dark:bg-[rgba(29, 22, 29, 0.4)] bg-[230,230,230, 0.4]">
         <NavbarBrand>
           <Logo />
         </NavbarBrand>
@@ -36,12 +36,12 @@ export const GlobalLayout = ({ children }) => {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
+      {/*  */}
+
       {children}
 
       {/* FOOTER */}
-
-      {/* <Rectangule />
-      <Footer /> */}
+      <Footer />
     </div>
   );
 };
