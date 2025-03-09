@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import { useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
 export const Title = ({ text }) => {
 	const ref = useRef(null);
@@ -6,7 +6,7 @@ export const Title = ({ text }) => {
 	const isInView = useInView(ref, { once: true });
 
 	return (
-		<h1 className="text-5xl text-[#F2F2F2] font-bold" ref={ref}>
+		<h1 className="text-5xl text-text-50  font-bold" ref={ref}>
 			{text.split('').map((letter, index) => (
 				<motion.span
 					key={index}

@@ -19,12 +19,12 @@ export const FormLogin = () => {
 					classNames={{
 						inputWrapper: [
 							'w-80',
-							'shadow-xl',
 							'bg-transparent',
-							'border-[#D189DC]',
+							'border-secodary-300',
 							'backdrop-blur-xl',
-							'group-data-[focus=true]:border-[#B23BC4]',
+							'group-data-[focus=true]:border-secondary-500',
 						],
+						label: ['text-text-50', 'font-bold'],
 					}}
 					color="success"
 					size="lg"
@@ -58,35 +58,36 @@ export const FormLogin = () => {
 							'w-80',
 							'shadow-xl',
 							'bg-transparent',
-							'border-[#D189DC]',
+							'border-secondary-300',
 							'backdrop-blur-xl',
-							'group-data-[focus=true]:border-[#B23BC4]',
+							'group-data-[focus=true]:border-secondary-500',
 						],
+						label: ['text-text-50', 'font-bold'],
 					}}
 					size="lg"
 				/>
 				<p className="text-right mt-1">
-					<Link className="text-[10px] text-[#D189DC]" href="/recovery-password">
+					<Link className="text-[10px] text-secondary-300" href="/recovery-password" viewTransition>
 						¿Olvidaste tu contraseña?
 					</Link>
 				</p>
 			</div>
 			<Button
-				className=" w-80 bg-[#00C3FF] text-[#F2F2F2] font-bold text-base shadow-lg shadow-[#00C3FF]/40 "
+				className=" w-80 bg-accent-500 text-text-50 font-bold text-base shadow-lg shadow-accent-500/40 "
 				size="lg"
 			>
 				Iniciar Sesion
 			</Button>
 			<div className="mt-2 flex flex-row ">
 				<hr className="w-[74px] border-1 border-white relative mt-[14px] mr-2" />
-				<p className="text-[#F2F2F2] font-light">¿No tienes una cuenta?</p>
+				<p className="text-text-50 font-light">¿No tienes una cuenta?</p>
 				<hr className="w-[74px] border-1 border-white relative mt-[14px] ml-2" />
 			</div>
 			<Button
-				className="mt-2 border-[#B23BC4] text-[#F2F2F2] w-80  font-bold text-base shadow-lg shadow-[#B23BC4]/40 bg-[#B23BC4]"
+				className="mt-2 border-secondary-500 text-text-50 w-80  font-bold text-base shadow-lg shadow-secondary-500/40 bg-secondary-500"
 				size="lg"
 			>
-				<Link className="text-[#F2F2F2]" href="/register">
+				<Link className="text-[#F2F2F2]" href="/register" viewTransition>
 					Registrate
 				</Link>
 			</Button>

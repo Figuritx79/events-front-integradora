@@ -4,11 +4,11 @@ export const SectionFour = () => {
 	return (
 		<section className="mt-10 flex justify-center items-center flex-row gap-60">
 			<article className="">
-				<h3 className="text-2xl text-[#F2F2F2] font-bold">
+				<h3 className="text-2xl text-text-50 font-bold">
 					<span className="bg-gradient-to-r from-purple-500 to-cyan-700 text-transparent bg-clip-text">UpEvent</span>{' '}
 					para administradores
 				</h3>
-				<div className="text-white mt-4">
+				<div className="text-text-50 mt-4">
 					<p className="text-base">UpEvent también te ayuda a dar a conocer tus eventos, además </p>
 					<p className="text-base">contamos con una amplia gama de herramientas de </p>
 					<p className="text-base">administración que te permitirán tener el control total de tu </p>
