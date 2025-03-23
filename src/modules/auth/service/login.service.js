@@ -1,15 +1,15 @@
 import { api } from '../../global/config/api';
-import { partialUser } from '../../global/schemas/user.schema';
 
-export const login = async ({ email, password }) => {
-	const validatedUser = partialUser({ email, password });
-	if (!validatedUser.success) {
-		return null;
-	}
-	const request = await api.post('/login', JSON.stringify({ email, password }));
+export const login = async ({ user }) => {
+	try {
+		const { email, password } = user;
+		console.log({ email, password });
 
-	if (request.status === 200) {
-		return true;
+		const request = await api.post('/auth/login', JSON.stringify({ email, password }));
+
+		return request.status === 200;
+	} catch (error) {
+		console.error(error);
+		return false;
 	}
-	return false;
 };

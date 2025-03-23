@@ -20,7 +20,7 @@ export const GlobalLayout = ({ children }) => {
 					</NavbarItem>
 					<NavbarItem>
 						<Button as={Link} className="bg-[rgba(29, 22, 29, 0.4)] border border-[#B23BC4] text-[#D189DC]">
-							<Link to="/register" viewTransition>
+							<Link to="/admin-register" viewTransition>
 								Registrate
 							</Link>
 						</Button>
