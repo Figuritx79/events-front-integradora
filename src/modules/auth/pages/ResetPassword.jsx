@@ -2,15 +2,29 @@ import { Decoration } from '../components/Decoration';
 import { FormResetPassword } from '../components/FormResetPassword';
 import { useState, useEffect } from 'react';
 import { TokenExpired } from '../components/TokenExpired';
+import { ValidToken, getUrlToken } from '../service/resetPassword.service';
 function ResetPassword() {
 	const [isTokenExist, setIsTokenExist] = useState(false);
 	useEffect(() => {
-		const url = window.location.search;
-		const searchUrl = new URLSearchParams(url);
+		const validTokenRequest = async () => {
+			try {
+				const token = getUrlToken();
 
-		const token = searchUrl.get('context');
+				if (token === null) {
+					setIsTokenExist(false);
+					return;
+				}
 
-		setIsTokenExist(token !== '' && token !== null);
+				const validToken = await ValidToken({ token });
+
+				setIsTokenExist(validToken === true);
+			} catch (error) {
+				console.error(error);
+
+				setIsTokenExist(false);
+			}
+		};
+		validTokenRequest();
 	}, []);
 	return (
 		<main className="dark:bg-bg-950 bg-text-50 flex justify-center items-center h-screen">

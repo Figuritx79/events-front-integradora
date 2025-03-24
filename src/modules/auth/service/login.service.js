@@ -3,7 +3,6 @@ import { api } from '../../global/config/api';
 export const login = async ({ user }) => {
 	try {
 		const { email, password } = user;
-		console.log({ email, password });
 
 		const request = await api.post('/auth/login', JSON.stringify({ email, password }));
 

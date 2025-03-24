@@ -14,10 +14,19 @@ const userSchema = z.object({
 	occpation: z.string().max(50),
 });
 
+const resetPasswordSchema = z.object({
+	password: z.string().max(100).min(8),
+	confirm_password: z.string().max(100).min(8),
+});
+
 export function partialUser({ user }) {
 	return userSchema.partial().safeParse(user);
 }
 
 export function completedUser({ user }) {
 	return userSchema.safeParse(user);
+}
+
+export function completedPasssword({ password }) {
+	return resetPasswordSchema.safeParse(password);
 }
