@@ -4,15 +4,18 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import { partialUser } from '../../global/schemas/user.schema';
 import { AlertAnimate } from '../../global/components/AlertAnimate';
-import { login } from '../service/login.service';
+import { useAuth } from '../providers/AuthProvider';
+import { useNavigate } from 'react-router';
 export const FormLogin = () => {
 	const [isVisble, setIsVisible] = React.useState(false);
 	const visibility = () => setIsVisible(!isVisble);
 	const [isValidForm, setIsValidForm] = React.useState(true);
+	const navigate = useNavigate();
 	const [isLoading, setIsLoading] = React.useState(false);
 	const { register, handleSubmit } = useForm();
 	const [title, setTitle] = React.useState('');
 	const [description, setDescription] = React.useState('');
+	const { login } = useAuth();
 	const onSubmit = async (values) => {
 		setIsValidForm(true);
 		const validCredentials = partialUser({ user: values });
@@ -23,15 +26,17 @@ export const FormLogin = () => {
 			return;
 		}
 		setIsLoading(true);
-		const requestLogin = await login({ user: values });
-
-		if (!requestLogin) {
-			setIsValidForm(!isValidForm);
-			setTitle('Credenciales Incorrectas');
-			setDescription('Favor de ingresar credenciales correctas');
-			setIsLoading(false);
+		const { email, password } = values;
+		const validAuth = await login({ email, password });
+		if (validAuth) {
+			navigate('/dashboard-admin-event');
 			return;
 		}
+		setIsValidForm(!isValidForm);
+		setTitle('Credenciales Incorrectas');
+		setDescription('Favor de ingresar credenciales correctas');
+		setIsLoading(false);
+		return;
 	};
 	return (
 		<Form className="mt-8  flex justify-center items-center" onSubmit={handleSubmit(onSubmit)}>
