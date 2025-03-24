@@ -3,7 +3,7 @@ import { FormRecoveryPassword } from '../components/FormRecoveryPassword';
 
 function RecoveryPassword() {
 	return (
-		<main className="bg-bg-950 flex justify-center items-center h-screen">
+		<main className="dark:bg-bg-950 bg-text-50 flex justify-center items-center h-screen">
 			<div className="absolute top-0 left-0 ">
 				<Decoration />
 			</div>
