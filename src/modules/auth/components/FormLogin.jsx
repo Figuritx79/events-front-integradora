@@ -29,7 +29,7 @@ export const FormLogin = () => {
 		const { email, password } = values;
 		const validAuth = await login({ email, password });
 		if (validAuth) {
-			navigate('/dashboard-admin-event');
+			navigate('/AdminEvents');
 			return;
 		}
 		setIsValidForm(!isValidForm);
