@@ -1,23 +1,31 @@
 import { Outlet, useNavigate } from 'react-router';
 import { useAuth } from '../../auth/providers/AuthProvider';
 import { useEffect } from 'react';
+import { AdminEventLayout } from '../layout/EventLayout';
 
 function DashboardAdminEvent() {
-	const { credentials } = useAuth();
+	const { credentials, setCredentials } = useAuth();
+
 	const navigate = useNavigate();
 	useEffect(() => {
-		if (!credentials || credentials.role !== 'ADMIN_EVENTO') {
+		const role = sessionStorage.getItem('role');
+		const email = sessionStorage.getItem('email');
+		if (!role || role !== 'ADMIN_EVENTO') {
 			navigate('/login');
+			return;
 		}
-	}, [credentials, navigate]);
+		setCredentials({
+			email,
+			role,
+		});
+	}, [navigate]);
 	if (!credentials || credentials.role !== 'ADMIN_EVENTO') {
 		return null;
 	}
 	return (
-		<div>
-			<h1>Hello</h1>
+		<AdminEventLayout>
 			<Outlet />
-		</div>
+		</AdminEventLayout>
 	);
 }
 
