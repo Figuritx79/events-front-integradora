@@ -3,11 +3,11 @@ export const SectionTwo = () => {
 	return (
 		<section className="mt-10 flex justify-center items-center flex-row gap-80">
 			<article className="">
-				<h3 className="text-2xl text-text-50 font-bold">
+				<h3 className="text-2xl text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 font-bold">
 					¿Qué es{' '}
 					<span className="bg-gradient-to-r from-purple-500 to-cyan-700 text-transparent bg-clip-text">UpEvent</span>?
 				</h3>
-				<div className="text-white mt-4 text-text-50">
+				<div className="mt-4 text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
 					<p className="text-base">UpEvent es una plataforma integral para la gestión y </p>
 					<p className="text-base">promoción de tu evento, sin objetos ocultos encontrarás </p>
 					<p className="text-base">todo lo que necesitas para administrar cada detalle, </p>

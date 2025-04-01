@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import { CircleUser, House, Users, MapPinned, LogOut, Search, ChevronDown, Plus, Ellipsis, CalendarPlus, X, Menu, Eye, CalendarCog, CalendarCheck2, CalendarX2, CircleArrowRight, ImageUp, UserCheck, UserPen, UserX, CircleArrowLeft, Info } from "lucide-react";
 import { addToast } from "@heroui/toast";
 import {parseDate, getLocalTimeZone, parseZonedDateTime, now} from "@internationalized/date";
@@ -26,6 +26,7 @@ import {
   TableCell,
   Input,
   Button,
+  Image,
   DropdownTrigger,
   Dropdown,
   DropdownMenu,
@@ -275,6 +276,44 @@ const statusColorMap = {
 const INITIAL_VISIBLE_COLUMNS = ["email", "name", "age", "status", "actions"];
 
 export default function CreateEventStep4 () {
+  /* const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileType = file.type;
+      if (!fileType.match('image/jpeg') && !fileType.match('image/png')) {
+        // Mostrar error - formato no válido
+        console.error("Formato de archivo no válido");
+        e.target.value = null; // Limpiar la selección
+      } else {
+        // Procesar el archivo
+        console.log("Archivo válido:", file);
+      }
+    }
+  };*/
+  const [previewUrl, setPreviewUrl] = useState(null);
+
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const fileType = file.type;
+      if (!fileType.match('image/jpeg') && !fileType.match('image/png')) {
+        // Mostrar error - formato no válido
+        console.error("Formato de archivo no válido");
+        e.target.value = null; // Limpiar la selección
+        setPreviewUrl(null);
+      } else {
+        // Crear URL para previsualización
+        const objectUrl = URL.createObjectURL(file);
+        setPreviewUrl(objectUrl);
+        
+        // Opcional: Limpiar la URL cuando el componente se desmonte
+        return () => URL.revokeObjectURL(objectUrl);
+      }
+    }
+  };
+  
+  // Luego añadir onChange={handleFileChange} al Input
+
     const showToastInfo = (addToast) => {
       addToast({
           color: "primary",
@@ -645,10 +684,10 @@ let formatter = useDateFormatter({dateStyle: "long", timeStyle: "short", hour12:
                     classNames={ classNames }
             
                     checkboxesProps={{
-                    classNames: {
-                      wrapper: "after:bg-foreground after:text-background text-background",
-                    },
-                    }}
+                      classNames: {
+                          wrapper: "after:bg-primario-500 after:text-background text-background",
+                      },
+                      }}
                     selectedKeys={selectedKeys}
                     selectionMode="multiple"
                     sortDescriptor={sortDescriptor}
@@ -730,6 +769,7 @@ let formatter = useDateFormatter({dateStyle: "long", timeStyle: "short", hour12:
                     popoverContent: "text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 dark:dark",
                     calendar: "text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 dark:dark",
                     calendarContent: "text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 dark:dark",
+                    timeInput: "text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 dark:dark"
                   }}
                     />
 
@@ -787,27 +827,38 @@ let formatter = useDateFormatter({dateStyle: "long", timeStyle: "short", hour12:
                 />
 
                 <Input
-                className="w-full pb-2 pt-3"
-                size="md"
-                radius="md"
-                variant="bordered"
-                type="file"
-                label="Imagen de portada"
-                labelPlacement="outside"
-                isRequired
-                classNames={{
-                  input: "cursor-pointer file:text-text-50 file:bg-bg-50 dark:file:text-text-950 dark:file:bg-bg-950",
-                  inputWrapper: "border-dashed",
-              }}
-                startContent={
-                    <ImageUp strokeWidth={2} className="w-5 h-5"/>
-                }
+                  type="file"
+                  className="w-full pb-6 pt-3"
+                  variant="bordered"
+                  label="Subir imagen"
+                  labelPlacement="outside"
+                  size="md"
+                  radius="md"
+                  description="Formatos aceptados: jpg, jpeg, png"
+                  accept=".jpg, .jpeg, .png, image/jpeg, image/png"
+                  isRequired
+                  classNames={{
+                    input: "cursor-pointer file:text-text-50 file:bg-bg-50 dark:file:text-text-950 dark:file:bg-bg-950",
+                    inputWrapper: "border-dashed",
+                }}
+                  startContent={
+                    <ImageUp strokeWidth={2} className="w-5 h-5" />
+                  }
+                  onChange={handleFileChange}
                 />
-
-                <p className="text-default-500 text-xs pb-4">
-                  Esta imagen se mostrará como principal
-                </p>
-
+                {previewUrl && (
+        <div className="pb-6">
+          <p className="text-sm mb-2">Vista previa:</p>
+          <Image
+            src={previewUrl}
+            alt="Vista previa"
+            width={320}
+            height={200}
+            radius="md"
+            className="object-cover"
+          />
+        </div>
+      )}
                 </div>
               </DrawerBody>
               <DrawerFooter>

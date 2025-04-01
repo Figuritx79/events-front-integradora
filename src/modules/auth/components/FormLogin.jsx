@@ -39,7 +39,7 @@ export const FormLogin = () => {
 		return;
 	};
 	return (
-		<Form className="mt-8  flex justify-center items-center" onSubmit={handleSubmit(onSubmit)}>
+		<Form className="mt-8  flex justify-center items-center text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950" onSubmit={handleSubmit(onSubmit)}>
 			<div>
 				<Input
 					{...register('email')}
@@ -48,21 +48,21 @@ export const FormLogin = () => {
 					label="Correo"
 					placeholder="joeDoe@gmail.com"
 					isRequired
-					endContent={<Mail className="dark:text-text-50 text-accent-600" />}
+					endContent={<Mail className="text-secondary" />}
 					errorMessage="Ingres un correo valido"
 					variant="bordered"
 					classNames={{
 						inputWrapper: [
 							'w-80',
 							'bg-transparent',
-							'dark:text-text-50 text-text-950',
+							'text-text-50 dark:text-text-950',
 							'dark:border-secodary-300 border-secondary-600',
 							'backdrop-blur-xl',
 							'group-data-[focus=true]:border-secondary-500',
 						],
-						label: ['dark:text-text-50 text-text-950', 'font-bold'],
+						label: ['font-bold'],
 					}}
-					color="success"
+					color="secondary"
 					size="lg"
 				/>
 			</div>
@@ -72,7 +72,7 @@ export const FormLogin = () => {
 					variant="bordered"
 					isRequired
 					labelPlacement="outside"
-					color="success"
+					color="secondary"
 					placeholder="****"
 					label="Contraseña"
 					endContent={
@@ -95,12 +95,12 @@ export const FormLogin = () => {
 							'w-80',
 							'shadow-xl',
 							'bg-transparent',
-							'dark:text-text-50 text-text-950',
+							'text-text-50 dark:text-text-950',
 							'dark:border-secodary-300 border-secondary-600',
 							'backdrop-blur-xl',
 							'group-data-[focus=true]:border-secondary-500',
 						],
-						label: ['dark:text-text-50 text-text-950', 'font-bold'],
+						label: ['font-bold'],
 					}}
 					size="lg"
 				/>

@@ -8,12 +8,12 @@ export const TokenExpired = () => {
 				<div className="rounded-full bg-danger-50 p-3 mb-4 ">
 					<CircleAlert className="text-danger-500 w-8 h-8" />
 				</div>
-				<h4 className="font-bold text-large text-center text-text-950 dark:text-text-50">
+				<h4 className="font-bold text-large text-center text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
 					Enlace no válido o expirado
 				</h4>
 			</CardHeader>
 			<CardBody className="px-4 py-4 flex flex-col gap-4 items-center">
-				<p className="text-center text-text-950 dark:text-text-50">
+				<p className="text-center text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
 					El enlace para restablecer tu contraseña no es válido o ha expirado. Solicita uno nuevo si es necesario.
 				</p>
 				<Button className="mt-2 bg-accent-600 text-text-100 dark:bg-accent-400 dark:text-text-950 font-bold">

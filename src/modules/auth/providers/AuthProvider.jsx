@@ -22,6 +22,8 @@ export const AuthProvider = ({ children }) => {
 
 				setCredentials({ email, role });
 				console.log('Autenticado');
+				sessionStorage.setItem('role', role);
+				sessionStorage.setItem('email', email);
 				return true;
 			}
 			throw new Error('Invalid Credentials');
@@ -34,5 +36,5 @@ export const AuthProvider = ({ children }) => {
 		setCredentials(null);
 		navigate('/login');
 	};
-	return <AuthContext.Provider value={{ logout, login, credentials }}>{children}</AuthContext.Provider>;
+	return <AuthContext.Provider value={{ logout, login, credentials, setCredentials }}>{children}</AuthContext.Provider>;
 };

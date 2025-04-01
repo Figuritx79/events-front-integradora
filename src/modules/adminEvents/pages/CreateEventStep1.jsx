@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {parseDate, getLocalTimeZone, parseZonedDateTime, now} from "@internationalized/date";
 import { CircleUser, House, Users, MapPinned, ImageUp, ImagePlus, CircleArrowRight, CircleArrowLeft, Info} from "lucide-react";
 import {useDateFormatter} from "@react-aria/i18n";
@@ -7,6 +7,7 @@ import { addToast } from "@heroui/toast";
 import {
     Button,
     Input,
+    Image,
     Tabs,
     Tab, 
     DateRangePicker,
@@ -16,6 +17,28 @@ import {
 import { Link } from "react-router";
 
 export default function CreateEventStep1 () {
+    const [previewUrl, setPreviewUrl] = useState(null);
+  
+    const handleFileChange = (e) => {
+      const file = e.target.files[0];
+      if (file) {
+        const fileType = file.type;
+        if (!fileType.match('image/jpeg') && !fileType.match('image/png')) {
+          // Mostrar error - formato no válido
+          console.error("Formato de archivo no válido");
+          e.target.value = null; // Limpiar la selección
+          setPreviewUrl(null);
+        } else {
+          // Crear URL para previsualización
+          const objectUrl = URL.createObjectURL(file);
+          setPreviewUrl(objectUrl);
+          
+          // Opcional: Limpiar la URL cuando el componente se desmonte
+          return () => URL.revokeObjectURL(objectUrl);
+        }
+      }
+    };
+
   const showToast = (addToast) => {
     addToast({
         color: "primary",
@@ -68,7 +91,7 @@ export default function CreateEventStep1 () {
                 <DateRangePicker
                   hourCycle={12}
                   key="inicio"
-                  className="pb-2"
+                  className="pb-2 dark:dark"
                   hideTimeZone
                   showMonthAndYearPickers
                   defaultValue={rangeValue}
@@ -123,25 +146,31 @@ export default function CreateEventStep1 () {
               </div>
               
               <div className="flex justify-between items-start text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
-              <div className="flex justify-between items-start space-x-3">
-              <Input
-                size="md"
-                radius="md"
-                variant="bordered"
-                type="file"
-                label="Imagen de portada"
-                labelPlacement="outside"
-                isRequired
-                classNames={{
+              <div className="grid grid-cols-3 gap-3">
+                <div className="col-span-1">
+                <Input
+                  type="file"
+                  className="w-full pb-6"
+                  variant="bordered"
+                  label="Subir imagen"
+                  labelPlacement="outside"
+                  size="md"
+                  radius="md"
+                  description="Formatos aceptados: jpg, jpeg, png"
+                  accept=".jpg, .jpeg, .png, image/jpeg, image/png"
+                  isRequired
+                  classNames={{
                     input: "cursor-pointer file:text-text-50 file:bg-bg-50 dark:file:text-text-950 dark:file:bg-bg-950",
                     inputWrapper: "border-dashed",
                 }}
-                startContent={
-                    <ImageUp strokeWidth={2} className="w-5 h-5"/>
-                }
+                  startContent={
+                    <ImageUp strokeWidth={2} className="w-5 h-5" />
+                  }
+                  onChange={handleFileChange}
                 />
+                
                 <NumberInput
-                className="w-72"
+                className="w-full"
                   variant="bordered"
                   key="cupo"
                   label="Capacidad de personas"
@@ -151,11 +180,26 @@ export default function CreateEventStep1 () {
                   isClearable
                   minValue={5}
                 />
-              </div>
-                <div className="flex justify-between pt-6 space-x-3">
-                <Button 
+                </div>
+                <div  className="col-span-1 pl-9">
+            {previewUrl && (
+        <div className="">
+          <div>
+          <p className="text-sm mb-2">Vista previa de la portada:</p>
+          <Image
+            src={previewUrl}
+            alt="Vista previa"
+            radius="md"
+            className="object-cover w-full h-36"
+          />
+          </div>
+        </div>
+      )}
+                </div>
+                <div className="col-span-1 flex items-end justify-end space-x-3">
+          <Button 
                   as={Link}
-                   to="/AdminEvents"
+                   to="/AdminEvents/Events"
                   className="font-bold"
                   size="md"
                   radius="md"
@@ -177,7 +221,10 @@ export default function CreateEventStep1 () {
                     
                     Continuar
                   </Button>
-                </div>
+              </div>
+            </div>
+            
+       
             </div>
           </div>
           </div>

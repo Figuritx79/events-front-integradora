@@ -13,12 +13,12 @@ const AdminEventsPage = () => {
   }
 
   return (
-      <div className="h-screen relative bg-bg-50 dark:bg-bg-950">
-        <BackgroundLines/>
-        <div className="w-full z-10 absolute top-0 flex h-full"> 
-          <Sidebar/>
-          <Outlet/>
-        </div>
+    <div className="h-screen relative bg-bg-50 dark:bg-bg-950">
+      <BackgroundLines/>
+      <div className="w-full z-10 absolute top-0 flex h-full"> 
+        <Sidebar/>
+        <Outlet/>
+      </div>
     </div> 
   );
 };

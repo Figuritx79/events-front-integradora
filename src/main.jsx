@@ -5,7 +5,6 @@ import './index.css';
 import App from './App.jsx';
 import { ToastProvider } from '@heroui/toast';
 import { BrowserRouter, Route, Routes } from 'react-router';
-import About from './modules/events/pages/page.jsx';
 import Login from './modules/auth/pages/Login.jsx';
 import RecoveryPassword from './modules/auth/pages/RecoveryPassword.jsx';
 import ResetPassword from './modules/auth/pages/ResetPassword.jsx';
@@ -16,31 +15,11 @@ import Succes from './modules/auth/pages/Success.jsx';
 import { AuthProvider } from './modules/auth/providers/AuthProvider.jsx';
 import { HomeAdminEvent } from './modules/adminEvents/components/HomeDashboardEvent.jsx';
 import { Checkers } from './modules/adminEvents/components/Checkers.jsx';
-import { X } from "lucide-react";
-import { HeroUIProvider, Tooltip } from '@heroui/react';
-
-
-
-import AdminEventsPage from './modules/adminEvents/pages/AdminEventsPage.jsx';
-import CreateEventPage from './modules/adminEvents/pages/CreateEventPage.jsx';
-import HomeAdminEvents from './modules/adminEvents/pages/Home.jsx';
-import EventsAdminEvents from './modules/adminEvents/pages/Events.jsx';
-import CreateEventStep1 from './modules/adminEvents/pages/CreateEventStep1.jsx';
-import CreateEventStep2 from './modules/adminEvents/pages/CreateEventStep2.jsx';
-import CreateEventStep3 from './modules/adminEvents/pages/CreateEventStep3.jsx';
-import CreateEventStep4 from './modules/adminEvents/pages/CreateEventStep4.jsx';
-import CheckersAdminEvents from './modules/adminEvents/pages/Checkers.jsx';
-import ProfileAdminEvents from './modules/adminEvents/pages/Profile.jsx';
-
-import AdminPage from './modules/admin/pages/AdminPage.jsx';
-import HomeAdmin from './modules/admin/pages/Home.jsx';
-import UsersAdmin from './modules/admin/pages/Users.jsx';
-import ProfileAdmin from './modules/admin/pages/Profile.jsx';
-
-import UserPage from './modules/user/pages/UserPage.jsx';
-import HomeUser from './modules/user/pages/Home.jsx';
-import ProfileUser from './modules/user/pages/Profile.jsx';
-
+import EventLandingPage from './modules/events/pages/Landing.jsx';
+import RegisterEvent from './modules/events/pages/RegisterEvent.jsx';
+import { PersonalForm } from './modules/events/components/PersonalForm.jsx';
+import { CommonForm } from './modules/events/components/CommonForm.jsx';
+import { FinalForm } from './modules/events/components/FinalForm.jsx';
 createRoot(document.getElementById('root')).render(
 	<BrowserRouter>
 		<HeroUIProvider  locale="es-ES">
@@ -67,40 +46,28 @@ createRoot(document.getElementById('root')).render(
 			<AuthProvider>
 				<Routes>
 					<Route path="/" element={<App />} />
-					<Route path="/about" element={<About />} />
 					<Route path="/login" element={<Login />} />
 					<Route path="/recovery-password" element={<RecoveryPassword />} />
 					<Route path="/success" element={<Succes />} />
 					<Route path="/reset-password" element={<ResetPassword />} />
+					{/* Para registro rutas */}
 					<Route path="/admin-register" element={<AdminEventRegister />}>
 						<Route index element={<CommonAdminForm />} />
 						<Route path="personal" element={<PersonalAdminForm />} />
 					</Route>
-
-
-
-					<Route path="/AdminEvents" element={<AdminEventsPage/>}>
-						<Route index element={<HomeAdminEvents/>} />
-						<Route path="CreateEvent" element={<CreateEventPage/>}>
-							<Route index element={<CreateEventStep1/>} />  {/* Paso inicial */}
-							<Route path="Images" element={<CreateEventStep2/>} />
-							<Route path="Checkers" element={<CreateEventStep3/>} />
-							<Route path="Workshops" element={<CreateEventStep4/>} />
+					{/* Para El ADMIN EVENT */}
+					<Route path="/dashboard-admin-event" element={<DashboardAdminEvent />}>
+						<Route index element={<HomeAdminEvent />} />
+						<Route path="checker" element={<Checkers />} />
+					</Route>
+					{/* Para la landing */}
+					<Route path="/landing">
+						<Route path=":event" element={<EventLandingPage />} />
+						<Route path="register/:id" element={<RegisterEvent />}>
+							<Route index element={<PersonalForm />} />
+							<Route path="common" element={<CommonForm />} />
+							<Route path="final" element={<FinalForm />} />
 						</Route>
-						<Route path="Events" element={<EventsAdminEvents/>} />
-						<Route path="Checkers" element={<CheckersAdminEvents/>} />
-						<Route path="Profile" element={<ProfileAdminEvents/>} />
-					</Route>
-
-					<Route path="/Admin" element={ <AdminPage/> } > {/* Falta ruta para admins (creo) */}
-						<Route index element={ <HomeAdmin/> } />
-						<Route path="Users" element={ <UsersAdmin/> } />
-						<Route path="Profile" element={ <ProfileAdmin/> } />
-					</Route>
-
-					<Route path="/User" element={ <UserPage/> } >
-						<Route index element={ <HomeUser/> } />
-						<Route path="Profile" element={ <ProfileUser/> } />
 					</Route>
 				</Routes>
 			</AuthProvider>

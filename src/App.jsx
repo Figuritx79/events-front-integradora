@@ -7,7 +7,7 @@ import { SectionFour } from './modules/landing/components/SectionFour';
 function App() {
 	return (
 		<GlobalLayout>
-			<main className="flex justify-center items-center mt-20 flex-col ">
+			<main className="flex justify-center items-center mt-20 flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
 				<SectionOne />
 				<SectionTwo />
 				<SectionThree />

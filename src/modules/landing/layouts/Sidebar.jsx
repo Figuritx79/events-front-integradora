@@ -25,7 +25,6 @@ export default function Sidebar() {
                             href=""
                             className=""
                             color="light"
-                            textValue=""
                             >
                                 <div className="flex items-center pt-4">
                                     <img src={logo} alt="" className="w-7 h-7"/>
@@ -41,7 +40,6 @@ export default function Sidebar() {
                             href=""
                             className=""
                             color="light"
-                            textValue=""
                             >
                                 <div className="flex items-center py-[2px]">
                                     <House strokeWidth={2.5} className="w-5 h-5"/>
@@ -55,7 +53,6 @@ export default function Sidebar() {
                             href=""
                             className=""
                             color="light"
-                            textValue=""
                             >
                                 <div className="flex items-center py-[2px]">
                                     <CircleUser strokeWidth={2.5} className="w-5 h-5"/>
@@ -68,7 +65,6 @@ export default function Sidebar() {
                             to="/AdminEvents/Events" viewTransition
                             className=""
                             color="light"
-                            textValue=""
                             >
                                 <div className="flex items-center py-[2px]">
                                     <MapPinned strokeWidth={2.5} className="w-5 h-5"/>
@@ -82,7 +78,6 @@ export default function Sidebar() {
                             href=""
                             className=""
                             color="light"
-                            textValue=""
                             >
                                 <div className="flex items-center py-[2px]">
                                     <Users strokeWidth={2.5} className="w-5 h-5"/>
@@ -109,7 +104,6 @@ export default function Sidebar() {
                                 key={`item-${index}`} // Usa un key único para cada elemento
                                 className="text-sm"
                                 color="light"
-                                textValue=""
                                 >
                                     <Tooltip
                                     placement="top" delay={1000} radius="md" size="md" className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark"
