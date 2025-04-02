@@ -21,6 +21,7 @@ import RegisterEvent from './modules/events/pages/RegisterEvent.jsx';
 import { PersonalForm } from './modules/events/components/PersonalForm.jsx';
 import { CommonForm } from './modules/events/components/CommonForm.jsx';
 import { FinalForm } from './modules/events/components/FinalForm.jsx';
+import Success from './modules/events/pages/Succes.jsx';
 createRoot(document.getElementById('root')).render(
 	<BrowserRouter>
 		<HeroUIProvider>
@@ -49,6 +50,7 @@ createRoot(document.getElementById('root')).render(
 							<Route index element={<PersonalForm />} />
 							<Route path="common" element={<CommonForm />} />
 							<Route path="final" element={<FinalForm />} />
+							<Route path="good" element={<Success />} />
 						</Route>
 					</Route>
 				</Routes>

@@ -1,32 +1,49 @@
 import { Form, Input, Button } from '@heroui/react';
 import { Link, useNavigate } from 'react-router';
 import { useForm } from 'react-hook-form';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, OctagonAlert } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useRegisterEvent } from '../provider/RegisterEventProvider';
 import { partialUser } from '../../global/schemas/user.schema';
+import { registerEvent } from '../service/registerEvent.service';
+import { AlertAnimate } from '../../global/components/AlertAnimate';
+
 export const FinalForm = () => {
 	const [state, dispatch] = useRegisterEvent();
+	const [isValidForm, setIsValidForm] = useState(true);
 	const [isVisible, setIsVisible] = useState(false);
 	const changeVisibility = () => setIsVisible(!isVisible);
-	const [isValid, setIsValid] = useState(true);
 	const [isLoading, setIsLoading] = useState(false);
 	const { register, handleSubmit } = useForm();
 	const navigate = useNavigate();
 	useEffect(() => {
 		dispatch({ type: 'CHANGE_PERCENT', data: 50 });
 	}, []);
-	const onSubmit = (data) => {
+	const onSubmit = async (data) => {
 		setIsLoading(true);
+		setIsValidForm;
 		const validInfo = partialUser({ user: data });
-		setIsValid(true);
+		setIsValidForm(true);
 		if (!validInfo.success) {
-			setIsValid(!isValid);
+			setIsValidForm(!isValidForm);
 			setIsLoading(false);
 			return;
 		}
 		setIsLoading(true);
 		dispatch({ type: 'SET_FINAL_DATA', data: data });
+		setTimeout(() => {}, 1000);
+		console.log({ state });
+
+		const request = await registerEvent({ registerInfo: state });
+		if (!request) {
+			setIsLoading(false);
+			setIsValidForm(!isValidForm);
+			return false;
+		}
+		dispatch({ type: 'CHANGE_PERCENT', data: 100 });
+		setTimeout(() => {
+			navigate('../good');
+		}, 800);
 	};
 	return (
 		<Form className="w-[432px] h-40 flex justify-center items-center mt-28" onSubmit={handleSubmit(onSubmit)}>
@@ -157,7 +174,7 @@ export const FinalForm = () => {
 					{isLoading ? 'Enviando' : 'Enviar'}
 				</Button>
 			</div>
-			{/* {!isValidForm ? (
+			{!isValidForm ? (
 				<AlertAnimate
 					title={'Datos erroneos o vuelve a enviar el formulario'}
 					description={'Por favor, completa los campos o vuelve a enviar el formulario'}
@@ -167,7 +184,7 @@ export const FinalForm = () => {
 				/>
 			) : (
 				<div className="absolute hidden"></div>
-			)} */}
+			)}
 		</Form>
 	);
 };
