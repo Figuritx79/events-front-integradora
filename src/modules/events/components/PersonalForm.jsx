@@ -18,6 +18,7 @@ export const PersonalForm = () => {
 	const onSubmit = (data) => {
 		const dataValite = partialUser({ user: data });
 		setIsValid(true);
+
 		if (!dataValite.success) {
 			setIsValid(!isValid);
 			return;

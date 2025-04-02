@@ -8,6 +8,7 @@ import { parseDate } from '@internationalized/date';
 import { OctagonAlert } from 'lucide-react';
 import { AlertAnimate } from '../../global/components/AlertAnimate';
 export const CommonForm = () => {
+	const [selected, setSelected] = useState('Mujer');
 	const [, dispatch] = useRegisterEvent();
 	const [defaultDate, setDefaultDate] = useState(parseDate('1990-04-04'));
 	const { register, handleSubmit } = useForm();
@@ -17,6 +18,7 @@ export const CommonForm = () => {
 		dispatch({ type: 'CHANGE_PERCENT', data: 33 });
 	}, []);
 	const onSubmit = (data) => {
+		data.gender = selected;
 		const validInfo = partialUser({ user: data });
 
 		if (!validInfo.success) {
@@ -35,7 +37,7 @@ export const CommonForm = () => {
 			</div>
 			<div>
 				<DateInput
-					{...register('birth_date')}
+					{...register('birthDate')}
 					label="Fecha de nacimiento"
 					isRequired
 					labelPlacement="outside"
@@ -119,13 +121,14 @@ export const CommonForm = () => {
 			<div className="self-start ml-16">
 				<RadioGroup
 					color="secondary"
-					defaultValue="Mujer"
 					label="Genero"
 					{...register('gender')}
 					orientation="horizontal"
 					classNames={{
 						label: 'text-text-950 dark:text-text-50 font-bold',
 					}}
+					value={selected}
+					onValueChange={setSelected}
 				>
 					<Radio
 						classNames={{

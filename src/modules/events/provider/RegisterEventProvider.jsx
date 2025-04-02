@@ -22,7 +22,7 @@ const reducer = (state, action) => {
 			return { ...state, percet: action.data };
 		}
 		case 'SET_ID_EVENT': {
-			return { ...state, id: action.data };
+			return { ...state, idEvent: action.data };
 		}
 	}
 	return state;

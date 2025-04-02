@@ -2,8 +2,8 @@ import { z } from 'zod';
 
 const userSchema = z.object({
 	id: z.string().uuid(),
-	name: z.string().max(50).min(5),
-	lastname: z.string().max(50).min(5),
+	name: z.string().max(50).min(3),
+	lastname: z.string().max(50).min(3),
 	// birth_date: z.string().date(),
 	email: z.string().email().max(50).min(5),
 	password: z.string().max(100).min(8),
