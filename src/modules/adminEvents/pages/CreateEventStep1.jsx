@@ -168,18 +168,6 @@ export default function CreateEventStep1 () {
                   }
                   onChange={handleFileChange}
                 />
-                
-                <NumberInput
-                className="w-full"
-                  variant="bordered"
-                  key="cupo"
-                  label="Capacidad de personas"
-                  labelPlacement="outside"
-                  placeholder="Cupo"
-                  isRequired
-                  isClearable
-                  minValue={5}
-                />
                 </div>
                 <div  className="col-span-1 pl-9">
             {previewUrl && (
@@ -200,25 +188,24 @@ export default function CreateEventStep1 () {
           <Button 
                   as={Link}
                    to="/AdminEvents/Events"
-                  className="font-bold"
                   size="md"
                   radius="md"
                   variant="light"
-                  color="primary"
+                  color="default"
                     startContent={<CircleArrowLeft strokeWidth={2} className="w-5 h-5"/>}>
                     
                     Regresar
                   </Button> 
                   <Button 
-                  as={Link}
-                   to="/AdminEvents/CreateEvent/Images"
-                  className="font-bold"
-                  size="md"
-                  radius="md"
-                  variant="solid"
-                  color="primary"
+                    aria-label="Button registrar"
+                    as={Link}
+                    to="/AdminEvents/CreateEvent/Images"
+                    className="font-bold"
+                    size="md"
+                    radius="md"
+                    variant="ghost"
+                    color="primary"
                     startContent={<CircleArrowRight strokeWidth={2} className="w-5 h-5"/>}>
-                    
                     Continuar
                   </Button>
               </div>

@@ -121,7 +121,7 @@ export default function Sidebar() {
                     <div className="h-full overflow-y-auto px-2">
                         <Listbox 
                         aria-label="Eventos" 
-                        onAction={(key) => alert(key)} 
+                        //onAction={(key) => alert(key)} 
                         className="">
                             <ListboxSection title="">
                             {events.length === 0 ? 
