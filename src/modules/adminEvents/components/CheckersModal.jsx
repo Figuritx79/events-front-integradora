@@ -9,6 +9,7 @@ import {
     ModalBody,
     ModalFooter
 } from "@heroui/react";
+//import {CheckersToast} from './CheckersToast';
 
 // Componente Modal de Confirmación
 const CheckersModal = ({ 
@@ -20,8 +21,9 @@ const CheckersModal = ({
 }) => {
     // Determina el texto de acción basado en el estado actual (isEnabled)
     const actionTitle = isEnabled ? "inhabilitar" : "habilitar";
-
+    
     return (
+        <>
         <Modal 
             isOpen={isOpen} 
             onClose={onClose} 
@@ -68,7 +70,14 @@ const CheckersModal = ({
                         fullWidth
                         color={isEnabled ? "danger" : "success"}
                         variant="ghost"
-                        onPress={onConfirm}
+                        onPress={() => {
+                            onConfirm();
+                            /*CheckersToast({
+                                action: isEnabled ? "disable" : "enable",
+                                data
+                            })*/
+                            
+                        }}
                         className="font-bold"
                         startContent={isEnabled ? 
                             <UserX className="w-5 h-5" /> : 
@@ -79,6 +88,7 @@ const CheckersModal = ({
                 </ModalFooter>
             </ModalContent>
         </Modal>
+        </>
     );
 };
 

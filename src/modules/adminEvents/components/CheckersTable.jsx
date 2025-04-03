@@ -132,8 +132,6 @@ export default function CheckersTable () {
     
     const [page, setPage] = React.useState(1);
 
-    const pages = Math.ceil(checkers.length / rowsPerPage);
-
     const hasSearchFilter = Boolean(filterValue);
 
     const headerColumns = React.useMemo(() => {
@@ -144,21 +142,22 @@ export default function CheckersTable () {
     
     const filteredItems = React.useMemo(() => {
         let filteredUsers = [...checkers];
-        
+    
         if (hasSearchFilter) {
-            filteredUsers = filteredUsers.filter((user) =>
+          filteredUsers = filteredUsers.filter((user) =>
             user.name.toLowerCase().includes(filterValue.toLowerCase()),
-            );
+          );
         }
-        
         if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-            filteredUsers = filteredUsers.filter((user) =>
-              Array.from(statusFilter).includes(user.status),
-            );
-          }
-
+          filteredUsers = filteredUsers.filter((user) =>
+            Array.from(statusFilter).includes(user.status),
+          );
+        }
+    
         return filteredUsers;
     }, [checkers, filterValue, statusFilter]);
+
+    const pages = Math.ceil(filteredItems.length / rowsPerPage);
     
     const items = React.useMemo(() => {
         const start = (page - 1) * rowsPerPage;
@@ -192,19 +191,21 @@ export default function CheckersTable () {
             case "status":
                 return (
                     <Tooltip 
+                        aria-label="Tooltip status"
                         className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark"
                         content={user.status === "activo" ? "¿Inhabilitar?" : "¿Habilitar?" }
                         placement="top">
                         <Button
-                            size="sm"
-                            variant="light"
-                            color={user.status === "activo" ? "success" : "danger" }
-                            startContent={user.status === "activo" ? (
-                                <UserCheck strokeWidth={2} className="w-5 h-5"/>
-                                    ) : (
-                                <UserX strokeWidth={2} className="w-5 h-5"/>
-                            )}
-                            onPress={() => handleOpen(user)}>
+                        aria-label="Button status"
+                        size="sm"
+                        variant="light"
+                        color={user.status === "activo" ? "success" : "danger" }
+                        startContent={user.status === "activo" ? (
+                            <UserCheck aria-label="Checker icon activo" strokeWidth={2} className="w-5 h-5"/>
+                                ) : (
+                            <UserX aria-label="Checker icon inactivo" strokeWidth={2} className="w-5 h-5"/>
+                        )}
+                        onPress={() => handleOpen(user)}>
                             {user.status}
                         </Button>
                     </Tooltip>
@@ -212,24 +213,26 @@ export default function CheckersTable () {
             case "actions":
                 return (
                 <div>
-                <Tooltip content="Detalles" placement="top" className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark">
+                <Tooltip content="Detalles" placement="top" className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark" aria-label="Tooltip detalles">
                     <Button
+                    aria-label="Button detalles"
                     isIconOnly
                     size="sm"
                     variant="light"
                     color="primary"
                     onPress={() => handleOpenRead(user)}>
-                    <Eye strokeWidth={2} className="w-5 h-5"/>
+                    <Eye aria-label="Checker icon detalles" strokeWidth={2} className="w-5 h-5"/>
                     </Button>
                 </Tooltip>
-                <Tooltip content="Editar" placement="top" className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark">
+                <Tooltip content="Actualizar" placement="top" className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark" aria-label="Tooltip editar">
                     <Button
+                    aria-label="Button actualizar"
                     isIconOnly
                     size="sm"
                     variant="light"
                     color="primary"
                     onPress={() => handleOpenUpdate(user)}>
-                    <UserPen strokeWidth={2} className="w-5 h-5"/>
+                    <UserPen aria-label="Checker icon actualizar" strokeWidth={2} className="w-5 h-5"/>
                     </Button>
                 </Tooltip>
                 </div>
@@ -260,6 +263,7 @@ export default function CheckersTable () {
                     <h1 className="text-4xl font-bold">Checadores</h1>
                     <div className="flex gap-3">
                         <Input
+                            aria-label="Input busqueda"
                             className="w-[220px]"
                             size="md"
                             radius="md"
@@ -273,6 +277,7 @@ export default function CheckersTable () {
                         />
 
                         <Select
+                            aria-label="Select filas"
                             disallowEmptySelection
                             className="w-[110px]"
                             defaultSelectedKeys={["5"]}
@@ -294,6 +299,7 @@ export default function CheckersTable () {
                         </Select>
 
                         <Select
+                            aria-label="Select filtro por status"
                             disallowEmptySelection
                             className="w-[110px]"
                             selectionMode="multiple"
@@ -314,6 +320,7 @@ export default function CheckersTable () {
                         </Select>
 
                         <Select
+                            aria-label="Select columnas"
                             disallowEmptySelection
                             className="w-[120px]"
                             selectionMode="multiple"
@@ -334,6 +341,7 @@ export default function CheckersTable () {
                         </Select>
 
                         <Button 
+                            aria-label="Button registrar"
                             onPress={handleOpenCreate}
                             className="font-bold"
                             size="md"
@@ -361,6 +369,7 @@ export default function CheckersTable () {
         return (
             <div className="flex justify-between items-center pb-6 text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
                 <Pagination
+                    aria-label="Pagination tabla"
                     showControls
                     classNames={{
                       cursor: "font-bold",
@@ -409,9 +418,9 @@ export default function CheckersTable () {
         
         <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
             <div className="flex-1 min-h-0 overflow-hidden px-2">
-                <Table
+                <Table 
                     isHeaderSticky
-                    aria-label=""
+                    aria-label="Table checkers"
                     bottomContent={bottomContent}
                     bottomContentPlacement="outside"
                     classNames={ classNames }
@@ -436,7 +445,7 @@ export default function CheckersTable () {
 
                     <TableBody className="bg-transparent" emptyContent={"No se encontraron checadores :("} items={sortedItems}>
                         {(item) => (
-                            <TableRow key={item.id}>
+                            <TableRow aria-label="" key={item.email}>
                             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                             </TableRow>
                         )}

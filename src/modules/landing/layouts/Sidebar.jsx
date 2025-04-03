@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { getEvents } from '../../adminEvents/service/Events.service';
 import logo from '/icon.svg'
 import { CircleUser, House, Users, MapPinned } from "lucide-react";
 import { Link } from 'react-router';
@@ -9,8 +10,32 @@ import {
   ListboxSection,
   Divider,
 } from "@heroui/react";
+import { useAuth } from '../../auth/providers/AuthProvider';
 
 export default function Sidebar() {
+    const { credentials } = useAuth();
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await getEvents(credentials.email);
+                if (data) {
+                    setEvents(data.result);
+                    console.log(data)
+                } else {
+                    setError("No se pudieron obtener los datos");
+                }
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     return (
         <>
@@ -99,9 +124,16 @@ export default function Sidebar() {
                         onAction={(key) => alert(key)} 
                         className="">
                             <ListboxSection title="">
-                            {Array.from({ length: 30 }).map((_, index) => (
+                            {events.length === 0 ? 
+                            <ListboxItem
+                                className="text-sm"
+                                color="light"
+                                > 
+                                <p className="text-xs">No tienes eventos por ahora</p> 
+                            </ListboxItem>:
+                            events.map((event, index) => (
                                 <ListboxItem
-                                key={`item-${index}`} // Usa un key único para cada elemento
+                                key={event.name} // Usa un key único para cada elemento
                                 className="text-sm"
                                 color="light"
                                 >
@@ -110,14 +142,14 @@ export default function Sidebar() {
                                     content={
                                         <div className="p-2 w-48">
                                             <div className="text-xs">
-                                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                                {event.name}
                                             </div>
                                         </div>
                                     }>
                                         <div className="flex items-center py-[2px]">
                                             <img src={logo} className="w-5 h-5" alt="Logo" />
                                             <p className="pl-2 line-clamp-1 break-words w-[185px] text-text-50 dark:text-text-950">
-                                            Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+                                            {event.name}
                                             </p>
                                         </div>
                                     </Tooltip>
@@ -129,8 +161,8 @@ export default function Sidebar() {
                 </div>
                 <div className="pt-4 pb-5 px-4 text-text-50 dark:text-text-950">
                     <Divider className="my-2"/>
-                    <p className="text-xl font-bold">Laura Flores</p>
-                    <p className="text-xs">lauraflores@gmail.com</p>
+                    <p className="text-xl font-bold"></p>
+                    <p className="text-xs">{credentials.email}</p>
                 </div>
             </div>
         </>
