@@ -131,7 +131,7 @@ export default function Sidebar() {
                                 > 
                                 <p className="text-xs">No tienes eventos por ahora</p> 
                             </ListboxItem>:
-                            events.map((event, index) => (
+                            events.map((event) => (
                                 <ListboxItem
                                 key={event.name} // Usa un key único para cada elemento
                                 className="text-sm"

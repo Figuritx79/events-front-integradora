@@ -31,13 +31,13 @@ export default function EventsTable () {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    const INITIAL_VISIBLE_COLUMNS = ["indice", "name", "start_date", "end_date", "status", "actions"];
+    const INITIAL_VISIBLE_COLUMNS = ["indice", "name", "startDate", "endDate", "status", "actions"];
 
     const columns = [
         {name: "Índice", uid: "indice", sortable: true},
         {name: "Nombre", uid: "name", sortable: true},
-        {name: "Inicio", uid: "start_date"},
-        {name: "Fin", uid: "end_date"},
+        {name: "Inicio", uid: "startDate"},
+        {name: "Fin", uid: "endDate"},
         {name: "Status", uid: "status"},
         {name: "Acciones", uid: "actions"},
     ];    

@@ -51,9 +51,8 @@ const CheckersModal = ({
                 <ModalBody>
                     <div className="text-sm space-y-3 pb-6">
                         <p className="font-semibold">Nombre: <span className="font-normal">{data.name}</span></p>
-                        <p className="font-semibold">Apellido: <span className="font-normal">{data.lastname}</span></p>
-                        <p className="font-semibold">Correo: <span className="font-normal">{data.email}</span></p>
-                        <p className="font-semibold">Teléfono: <span className="font-normal">{data.phone}</span></p>
+                        <p className="font-semibold">Fecha inicial: <span className="font-normal">{data.startDate}</span></p>
+                        <p className="font-semibold">Fecha final: <span className="font-normal">{data.endDate}</span></p>
                     </div>
                 </ModalBody>
                 

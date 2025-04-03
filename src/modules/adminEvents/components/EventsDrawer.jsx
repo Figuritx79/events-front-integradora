@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { X, UserPlus, UserPen, CircleX, CircleCheck } from "lucide-react";
+import { X, CirclePlus, Pen, CircleX, CircleCheck } from "lucide-react";
 import { 
     Button, 
     Input, 
@@ -30,9 +30,8 @@ const CheckersDrawer = ({
 
     const [formData, setFormData] = useState({
         name: "",
-        lastname: "",
-        email: "",
-        phone: "",
+        endDate: "",
+        startDate: "",
     });
 
     // Resetear datos al abrir/cerrar el drawer
@@ -40,12 +39,11 @@ const CheckersDrawer = ({
         if (isOpen) {
             setFormData({
                 name: data.name || "",
-                lastname: data.lastname || "",
-                email: data.email || "",
-                phone: data.phone || ""
+                endDate: data.endDate || "",
+                startDate: data.startDate || "",
             });
         }
-    }, [isOpen, data.name, data.lastname, data.email, data.phone]);
+    }, [isOpen, data.name, data.endDate, data.startDate]);
 
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
@@ -59,9 +57,8 @@ const CheckersDrawer = ({
         // Resetear a los valores originales
         setFormData({
             name: data.name || "",
-            lastname: data.lastname || "",
-            email: data.email || "",
-            phone: data.phone || ""
+            endDate: data.endDate || "",
+            startDate: data.startDate || "",
         });
     };
 
@@ -76,28 +73,28 @@ const CheckersDrawer = ({
     const actionConfig = {
         create: {
             title: "Registrar checador",
-            icon: <UserPlus strokeWidth={2} className="w-5 h-5" />,
+            icon: <CirclePlus strokeWidth={2} className="w-5 h-5" />,
             buttonLabel: "Registrar",
             placeholders: {
                 name: "Ingresa su nombre",
-                lastname: "Ingresa su apellido",
-                email: "Ingresa su correo electrónico",
+                endDate: "Ingresa su apellido",
+                startDate: "Ingresa su correo electrónico",
                 phone: "Ingresa su teléfono"
             }
         },
         update: {
-            title: "Actualizar checador",
-            icon: <UserPen strokeWidth={2} className="w-5 h-5" />,
+            title: "Actualizar evento",
+            icon: <Pen strokeWidth={2} className="w-5 h-5" />,
             buttonLabel: "Actualizar",
             placeholders: {
                 name: data.name || "Nombre actual",
-                lastname: data.lastname || "Apellido actual",
-                email: data.email || "Correo actual",
+                endDate: data.endDate || "Apellido actual",
+                startDate: data.startDate || "Correo actual",
                 phone: data.phone || "Teléfono actual"
             }
         },
         read: {
-            title: "Detalles del checador",
+            title: "Detalles del evento",
             placeholders: {}
         }
     };
@@ -153,6 +150,21 @@ const CheckersDrawer = ({
                             labelPlacement="outside"
                             isRequired={action !== 'read'}
                         />
+                        
+                        <Input
+                            className="w-full py-3"
+                            size="md"
+                            radius="md"
+                            variant="bordered"
+                            type="startDate"
+                            placeholder={placeholders.startDate}
+                            label="Fecha inicial"
+                            value={formData.startDate}
+                            isReadOnly={action === 'read'}
+                            onValueChange={(value) => handleInputChange('startDate', value)}
+                            labelPlacement="outside"
+                            isRequired={action !== 'read'}
+                        />
 
                         <Input
                             className="w-full py-3"
@@ -160,41 +172,11 @@ const CheckersDrawer = ({
                             radius="md"
                             variant="bordered"
                             type="text"
-                            placeholder={placeholders.lastname}
-                            label="Apellido"
-                            value={formData.lastname}
+                            placeholder={placeholders.endDate}
+                            label="Fecha final"
+                            value={formData.endDate}
                             isReadOnly={action === 'read'}
-                            onValueChange={(value) => handleInputChange('lastname', value)}
-                            labelPlacement="outside"
-                            isRequired={action !== 'read'}
-                        />
-
-                        <Input
-                            className="w-full py-3"
-                            size="md"
-                            radius="md"
-                            variant="bordered"
-                            type="email"
-                            placeholder={placeholders.email}
-                            label="Correo electrónico"
-                            value={formData.email}
-                            isReadOnly={action === 'read'}
-                            onValueChange={(value) => handleInputChange('email', value)}
-                            labelPlacement="outside"
-                            isRequired={action !== 'read'}
-                        />
-
-                        <Input
-                            className="w-full py-3"
-                            size="md"
-                            radius="md"
-                            variant="bordered"
-                            type="tel"
-                            placeholder={placeholders.phone}
-                            label="Teléfono"
-                            value={formData.phone}
-                            isReadOnly={action === 'read'}
-                            onValueChange={(value) => handleInputChange('phone', value)}
+                            onValueChange={(value) => handleInputChange('endDate', value)}
                             labelPlacement="outside"
                             isRequired={action !== 'read'}
                         />

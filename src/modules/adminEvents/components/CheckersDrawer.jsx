@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { X, UserPlus, UserPen, UserX, UserCheck } from "lucide-react";
 import { 
+    Select,
+    SelectItem,
     Button, 
     Input, 
     Tooltip, 
@@ -11,6 +13,10 @@ import {
     DrawerFooter
 } from "@heroui/react";
 import CheckersModal from "./CheckersModal"
+import { createChecker } from "../service/Checkers.service"; // Importar función de API
+import { useAuth } from '../../auth/providers/AuthProvider';
+import { getEvents } from "../service/Events.service";
+import { CheckersToast } from "./CheckersToast";
 
 const CheckersDrawer = ({
     action = "create",
@@ -19,7 +25,33 @@ const CheckersDrawer = ({
     onOpenChange,
     onConfirm,
 }) => {
+    const { credentials } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [events, setEvents] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [success, setSuccess] = useState(false);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await getEvents(credentials.email);
+                if (data) {
+                    setEvents(data.result);
+                    setSuccess(true);
+                    console.log(data)
+                } else {
+                    setError("No se pudieron obtener los datos");
+                }
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
 
     const handleModalConfirm = () => {
         setIsModalOpen(false);
@@ -33,6 +65,7 @@ const CheckersDrawer = ({
         lastname: "",
         email: "",
         phone: "",
+        idEvent: ""
     });
 
     // Resetear datos al abrir/cerrar el drawer
@@ -42,7 +75,8 @@ const CheckersDrawer = ({
                 name: data.name || "",
                 lastname: data.lastname || "",
                 email: data.email || "",
-                phone: data.phone || ""
+                phone: data.phone || "",
+                idEvent: ""
             });
         }
     }, [isOpen, data.name, data.lastname, data.email, data.phone]);
@@ -65,12 +99,42 @@ const CheckersDrawer = ({
         });
     };
 
-    const handleSubmit = () => {
-        onConfirm({
-            action,
-            data: formData
-        });
-        handleClose();
+    const handleSubmit = async () => {
+        if (action !== "create") return;
+        
+        setIsSubmitting(true);
+        
+        try {
+            const result = await createChecker(credentials.email, formData);
+            
+            if (result) {
+                CheckersToast({
+                    onConfirm: () => {
+                        onConfirm({
+                            action,
+                            data: formData
+                        });
+                        handleClose();
+                    },
+                    action: "create",
+                    isSuccess: true
+                });
+            } else {
+                // Esto maneja casos donde la API devuelve un status diferente a 200
+                CheckersToast({
+                    action: "create",
+                    isSuccess: false
+                });
+            }
+        } catch (error) {
+            CheckersToast({
+                action: "create",
+                isSuccess: false,
+                errorMessage: error.message // Pasa el mensaje de error específico
+            });
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     const actionConfig = {
@@ -198,6 +262,32 @@ const CheckersDrawer = ({
                             labelPlacement="outside"
                             isRequired={action !== 'read'}
                         />
+                        {action === 'create' && (
+                            <Select
+                                aria-label="Select eventos"
+                                label="Evento"
+                                labelPlacement="outside"
+                                isRequired
+                                disallowEmptySelection
+                                className="w-full"
+                                selectionMode="single"
+                                variant="bordered"
+                                selectedKeys={formData.idEvent ? [formData.idEvent] : []}
+                                onSelectionChange={(keys) => {
+                                    const selectedKey = Array.from(keys)[0];
+                                    handleInputChange('idEvent', selectedKey);
+                                }}
+                                classNames={{
+                                    popoverContent: "text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950", // Estilo para el popover
+                                    //value: "text-primario-500 font-bold" // Estilo para el valor seleccionado
+                                }}>
+                                {events.map((event) => (
+                                    <SelectItem key={event.id} value={event.id} className="text-text-50 bg-bg-50 capitalize dark:dark dark:text-text-950 dark:bg-bg-950">
+                                        {event.name}
+                                    </SelectItem>
+                                ))}
+                            </Select>
+                        )}
                     </div>
                 </DrawerBody>
 
@@ -218,6 +308,7 @@ const CheckersDrawer = ({
                     )}
                     {action !== 'read' && (
                         <Button 
+                            isLoading={isSubmitting}
                             fullWidth
                             color="secondary"
                             variant="ghost"

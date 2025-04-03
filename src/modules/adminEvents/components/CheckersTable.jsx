@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { findCheckers } from '../service/Checkers.service';
+import { getCheckers } from '../service/Checkers.service';
 import { Search, UserPlus, Eye, UserPen, UserCheck, UserX } from "lucide-react";
 import {
   Select, 
@@ -17,9 +17,11 @@ import {
   Skeleton
 } from "@heroui/react";
 import CheckersDrawer from "./CheckersDrawer";
+import { useAuth } from '../../auth/providers/AuthProvider';
 import CheckersModal from "./CheckersModal"
 
 export default function CheckersTable () {
+    const { credentials } = useAuth();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [drawerAction, setDrawerAction] = useState("create"); // "create", "update", "read"
@@ -27,6 +29,7 @@ export default function CheckersTable () {
     const [checkers, setCheckers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
 
     const INITIAL_VISIBLE_COLUMNS = ["indice", "name", "lastname", "phone", "status", "email", "actions"];
 
@@ -52,12 +55,12 @@ export default function CheckersTable () {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await findCheckers();
+                const data = await getCheckers(credentials.email);
                 if (data) {
-                    const dataCount = data.result.map((checker, index) => ({
-                        ...checker,
+                    const dataCount = data.result.map((item, index) => ({
+                        ...item.checker,
                         indice: index + 1,
-                        status: checker.status ? "activo" : "inactivo"
+                        status: item.checker.status ? "activo" : "inactivo"
                     }));
                     setCheckers(dataCount);
                     console.log(data)
@@ -71,7 +74,7 @@ export default function CheckersTable () {
             }
         };
         fetchData();
-    }, []);
+    }, [refreshTrigger]);
 
     // Manejadores para abrir el drawer con diferentes acciones
     const handleOpenCreate = () => {
@@ -112,6 +115,7 @@ export default function CheckersTable () {
             console.log("Actualizar usuario:", data);
         }
         // Cerrar el drawer después de la acción
+        setRefreshTrigger(prev => !prev); // ¡Invierte el valor para disparar el efecto!
         setIsDrawerOpen(false);
     };
     
@@ -445,7 +449,7 @@ export default function CheckersTable () {
 
                     <TableBody className="bg-transparent" emptyContent={"No se encontraron checadores :("} items={sortedItems}>
                         {(item) => (
-                            <TableRow aria-label="" key={item.email}>
+                            <TableRow aria-label={item.indice} key={item.email}>
                             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                             </TableRow>
                         )}

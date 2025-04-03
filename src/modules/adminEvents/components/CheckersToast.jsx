@@ -1,56 +1,50 @@
-/*import { addToast } from "@heroui/toast";
+import { addToast } from "@heroui/toast";
 import { UserCheck, UserX } from "lucide-react";
-// Importar tus funciones de API
-import { 
-  enableChecker,
-  disableChecker,
-  createChecker,
-  updateChecker 
-} from "../api/checkers"; // Ajusta la ruta según tu estructura
 
-export const CheckersToast = async ({ 
+export const CheckersToast = ({ 
+    onConfirm, 
     action, 
-    data 
+    isSuccess,
+    errorMessage 
 }) => {
-    // Mapeo de acciones a funciones API
-    const apiActions = {
-        enable: enableChecker,
-        disable: disableChecker,
-        create: createChecker,
-        update: updateChecker
+    // Mensajes según la acción
+    const actionMessages = {
+        enable: {
+            success: 'habilitado',
+            error: 'habilitar'
+        },
+        disable: {
+            success: 'inhabilitado',
+            error: 'inhabilitar'
+        },
+        create: {
+            success: 'registrado',
+            error: 'registrar'
+        },
+        update: {
+            success: 'actualizado',
+            error: 'actualizar'
+        }
     };
 
-    // Mensajes de éxito
-    const successMessages = {
-        enable: 'habilitado',
-        disable: 'inhabilitado',
-        create: 'registrado',
-        update: 'actualizado'
-    };
-
-    try {
-        // Obtener la función correspondiente a la acción
-        const apiFunction = apiActions[action];
-        if (!apiFunction) throw new Error('Acción no válida');
-
-        // Ejecutar la petición API
-        const result = await apiFunction(data);
-
-        // Mostrar toast de éxito
-        addToast({
+    // Configuración del toast según éxito/error
+    const toastConfig = isSuccess 
+        ? {
             color: "success",
-            icon: <UserCheck strokeWidth={2} className="w-5 h-5"/>,
-            description: `Se ${successMessages[action]} el checador exitosamente`,
-            title: `Checador ${successMessages[action]}`
-        });
-        
-    } catch (error) {
-        // Mostrar toast de error
-        addToast({
+            icon: <UserCheck strokeWidth={2} className="w-5 h-5" />,
+            title: `Checador ${actionMessages[action].success}`,
+            description: `Se ${actionMessages[action].success} el checador exitosamente`
+        }
+        : {
             color: "danger",
             icon: <UserX strokeWidth={2} className="w-5 h-5" />,
-            description: `No se pudo ${successMessages[action]} el checador: ${error.message}`,
-            title: 'Error en la operación'
-        });
-    }
-};*/
+            title: "Error en la operación",
+            description: errorMessage || `No se pudo ${actionMessages[action].error} el checador`
+        };
+
+    // Mostrar el toast
+    addToast(toastConfig);
+
+    // Ejecutar callback de confirmación si existe
+    if (onConfirm) onConfirm();
+};
