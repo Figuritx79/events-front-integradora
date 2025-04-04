@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 import { addToast } from "@heroui/toast";
 import { api } from "../../global/config/api";
-
+import { useAuth } from '../../auth/providers/AuthProvider';
 import {
     Button,
     Input,
@@ -20,6 +20,7 @@ import {
 import { Link } from "react-router";
 
 export default function CreateEventStep1() {
+    const { credentials } = useAuth();
     const [previewUrl, setPreviewUrl] = useState(null);
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -73,7 +74,7 @@ export default function CreateEventStep1() {
           description: data.description,
           startDate: startDate,
           endDate: endDate,
-          email: "20233tn077@utez.edu.mx" // Email fijo según requerimiento
+          email: credentials.email
         };
     
         // Crear Blob con tipo correcto
