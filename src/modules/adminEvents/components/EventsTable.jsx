@@ -188,7 +188,7 @@ export default function EventsTable () {
                 );
             case "name":
                 return (
-                    cellValue
+                    <p className="line-clamp-1 break-words xl:max-w-[550px] md:max-w-[200px] sm:max-w-[100px]">{cellValue}</p>
                 );
             case "status":
                 return (

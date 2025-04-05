@@ -423,6 +423,7 @@ export default function CheckersTable () {
         <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
             <div className="flex-1 min-h-0 overflow-hidden px-2">
                 <Table 
+                    color="primary"
                     isHeaderSticky
                     aria-label="Table checkers"
                     bottomContent={bottomContent}
@@ -433,7 +434,8 @@ export default function CheckersTable () {
                     topContent={topContent}
                     topContentPlacement="outside"
                     onSelectionChange={setSelectedKeys}
-                    onSortChange={setSortDescriptor}>
+                    onSortChange={setSortDescriptor}
+                    className="px-6">
 
                     <TableHeader columns={headerColumns} className="bg-transparent">
                         {(column) => (

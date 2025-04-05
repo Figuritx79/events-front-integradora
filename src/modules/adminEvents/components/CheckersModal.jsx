@@ -2,13 +2,14 @@ import React from "react";
 import { UserX, X, UserCheck } from "lucide-react";
 import { 
     Button, 
-    Tooltip, 
     Modal,
     ModalContent,
     ModalHeader,
     ModalBody,
-    ModalFooter
+    ModalFooter,
+    useDraggable, 
 } from "@heroui/react";
+import { ButtonX } from "../../global/components/Components";
 //import {CheckersToast} from './CheckersToast';
 
 // Componente Modal de Confirmación
@@ -21,39 +22,30 @@ const CheckersModal = ({
 }) => {
     // Determina el texto de acción basado en el estado actual (isEnabled)
     const actionTitle = isEnabled ? "inhabilitar" : "habilitar";
+    const targetRef = React.useRef(null);
+    const {moveProps} = useDraggable({targetRef, isDisabled: !isOpen});
     
     return (
         <>
         <Modal 
+            ref={targetRef} 
             isOpen={isOpen} 
             onClose={onClose} 
             size="md" 
             backdrop="opaque" 
             hideCloseButton
-            className="text-text-50 bg-bg-50 capitalize dark:dark dark:text-text-950 dark:bg-bg-950">
+            className="text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950">
             <ModalContent>
-                <ModalHeader className="place-content-between pt-10 pb-6 text-4xl">
-                    <h1 className="text-2xl font-bold">¿desea {actionTitle} el siguiente checador?</h1>
-                    <Tooltip 
-                        content="Cerrar" 
-                        placement="left" 
-                        className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark">
-                        <Button
-                            isIconOnly
-                            size="sm"
-                            variant="light"
-                            onPress={onClose}>
-                            <X strokeWidth={2} className="w-5 h-5"/>
-                        </Button>
-                    </Tooltip>
+                <ModalHeader {...moveProps} className="place-content-between pt-10 pb-6 text-4xl">
+                    <h1 className="text-xl font-bold">¿Desea {actionTitle} el siguiente checador?</h1>
+                    <ButtonX onPress={onClose}></ButtonX>
                 </ModalHeader>
                 
                 <ModalBody>
                     <div className="text-sm space-y-3 pb-6">
-                        <p className="font-semibold">Nombre: <span className="font-normal">{data.name}</span></p>
-                        <p className="font-semibold">Apellido: <span className="font-normal">{data.lastname}</span></p>
-                        <p className="font-semibold">Correo: <span className="font-normal">{data.email}</span></p>
-                        <p className="font-semibold">Teléfono: <span className="font-normal">{data.phone}</span></p>
+                        <p className="font-semibold">Nombre: <span className="font-normal break-words">{data.name + " " + data.lastname}</span></p>
+                        <p className="font-semibold">Correo: <span className="font-normal break-words">{data.email}</span></p>
+                        <p className="font-semibold">Teléfono: <span className="font-normal break-words">{data.phone}</span></p>
                     </div>
                 </ModalBody>
                 

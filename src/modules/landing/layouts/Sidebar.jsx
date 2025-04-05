@@ -9,8 +9,10 @@ import {
   ListboxItem,
   ListboxSection,
   Divider,
+  Image
 } from "@heroui/react";
 import { useAuth } from '../../auth/providers/AuthProvider';
+import { Logout } from "../../global/components/Components";
 
 export default function Sidebar() {
     const { credentials } = useAuth();
@@ -55,6 +57,8 @@ export default function Sidebar() {
                                     <img src={logo} alt="" className="w-7 h-7"/>
                                     <p className="pl-2 text-xl font-bold">UpEvent</p>
                                 </div>
+                                <p className="text-xs break-words w-[200px] pt-2">{credentials.email}</p>
+
                             </ListboxItem>
                         </ListboxSection>
                         <ListboxSection title="Tus páginas" className="text-xs px-2 pt-2 text-text-50 dark:text-text-950">
@@ -140,14 +144,34 @@ export default function Sidebar() {
                                     <Tooltip
                                     placement="top" delay={1000} radius="md" size="md" className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark"
                                     content={
-                                        <div className="p-2 w-48">
-                                            <div className="text-xs">
-                                                {event.name}
+                                        <div className="p-2 w-48 flex items-center">
+                                            <div className="w-12">
+                                            <Image
+                                                src={event.frontPage}
+                                                alt="Vista previa"
+                                                isZoomed
+                                                isBlurred
+                                                radius="none"
+                                                className="object-cover w-12 h-full"
+                                            />
+                                            </div>
+                                            <div className="w-36">
+                                            <p className="text-xs pl-2 break-words text-text-50 dark:text-text-950">
+                                            {event.name}
+                                            </p>
                                             </div>
                                         </div>
                                     }>
                                         <div className="flex items-center py-[2px]">
-                                            <img src={logo} className="w-5 h-5" alt="Logo" />
+                                            <Image
+                                            isZoomed
+                                                src={event.frontPage}
+                                                alt="Vista previa"
+                                                width={20}
+                                                height={20}
+                                                radius="none"
+                                                className="object-cover"
+                                            />
                                             <p className="pl-2 line-clamp-1 break-words w-[185px] text-text-50 dark:text-text-950">
                                             {event.name}
                                             </p>
@@ -159,10 +183,8 @@ export default function Sidebar() {
                         </Listbox>
                     </div>
                 </div>
-                <div className="pt-4 pb-5 px-4 text-text-50 dark:text-text-950">
-                    <Divider className="my-2"/>
-                    <p className="text-xl font-bold"></p>
-                    <p className="text-xs">{credentials.email}</p>
+                <div className="pt-6 pb-5 px-4 text-text-50 dark:text-text-950">
+                    <Logout/>
                 </div>
             </div>
         </>

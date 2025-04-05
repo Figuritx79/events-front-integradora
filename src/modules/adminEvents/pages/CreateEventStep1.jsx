@@ -70,11 +70,11 @@ export default function CreateEventStep1() {
     
         // Crear DTO con estructura que espera el backend
         const eventDto = {
-          name: data.name,
-          description: data.description,
-          startDate: startDate,
-          endDate: endDate,
-          email: credentials.email
+            name: data.name,
+            description: data.description,
+            startDate: startDate,
+            endDate: endDate,
+            email: credentials.email
         };
     
         // Crear Blob con tipo correcto

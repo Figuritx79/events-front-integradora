@@ -30,10 +30,10 @@ const CheckersModal = ({
             size="md" 
             backdrop="opaque" 
             hideCloseButton
-            className="text-text-50 bg-bg-50 capitalize dark:dark dark:text-text-950 dark:bg-bg-950">
+            className="text-text-50 bg-bg-50 normal-case dark:dark dark:text-text-950 dark:bg-bg-950">
             <ModalContent>
                 <ModalHeader className="place-content-between pt-10 pb-6 text-4xl">
-                    <h1 className="text-2xl font-bold">¿desea {actionTitle} el siguiente evento?</h1>
+                    <h1 className="text-2xl font-bold">¿Desea {actionTitle} el siguiente evento?</h1>
                     <Tooltip 
                         content="Cerrar" 
                         placement="left" 

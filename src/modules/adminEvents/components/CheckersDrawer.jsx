@@ -5,7 +5,6 @@ import {
     SelectItem,
     Button, 
     Input, 
-    Tooltip, 
     Drawer, 
     DrawerContent,
     DrawerHeader, 
@@ -17,6 +16,7 @@ import { createChecker } from "../service/Checkers.service"; // Importar funció
 import { useAuth } from '../../auth/providers/AuthProvider';
 import { getEvents } from "../service/Events.service";
 import { CheckersToast } from "./CheckersToast";
+import { ButtonX, Spinner } from '../../global/components/Components';
 
 const CheckersDrawer = ({
     action = "create",
@@ -177,7 +177,7 @@ const CheckersDrawer = ({
             backdrop="opaque" 
             placement="right" 
             hideCloseButton
-            className="text-text-50 bg-bg-50 capitalize dark:dark dark:text-text-950 dark:bg-bg-950"
+            className="text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950"
             motionProps={{ 
                 variants: {
                     enter: { opacity: 1, x: 0, duration: 0.3 },
@@ -187,18 +187,7 @@ const CheckersDrawer = ({
             <DrawerContent>
                 <DrawerHeader className="place-content-between pt-10 pb-6 text-4xl">
                     <h1 className="text-4xl font-bold">{actionTitle}</h1>
-                    <Tooltip 
-                        content="Cerrar" 
-                        placement="left" 
-                        className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark">
-                        <Button
-                            isIconOnly
-                            size="sm"
-                            variant="light"
-                            onPress={handleClose}>
-                            <X strokeWidth={2} className="w-5 h-5"/>
-                        </Button>
-                    </Tooltip>
+                    <ButtonX onPress={handleClose}/>
                 </DrawerHeader>
 
                 <DrawerBody>
@@ -282,7 +271,7 @@ const CheckersDrawer = ({
                                     //value: "text-primario-500 font-bold" // Estilo para el valor seleccionado
                                 }}>
                                 {events.map((event) => (
-                                    <SelectItem key={event.id} value={event.id} className="text-text-50 bg-bg-50 capitalize dark:dark dark:text-text-950 dark:bg-bg-950">
+                                    <SelectItem key={event.id} value={event.id} className="text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950">
                                         {event.name}
                                     </SelectItem>
                                 ))}
@@ -309,12 +298,13 @@ const CheckersDrawer = ({
                     {action !== 'read' && (
                         <Button 
                             isLoading={isSubmitting}
+                            spinner={<Spinner/>}
                             fullWidth
                             color="secondary"
                             variant="ghost"
                             onPress={handleSubmit}
                             className="font-bold"
-                            startContent={icon}>
+                            startContent={isSubmitting ? "" : icon}>
                             {buttonLabel}
                         </Button>
                     )}

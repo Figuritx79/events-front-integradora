@@ -110,7 +110,7 @@ const CheckersDrawer = ({
             backdrop="opaque" 
             placement="right" 
             hideCloseButton
-            className="text-text-50 bg-bg-50 capitalize dark:dark dark:text-text-950 dark:bg-bg-950"
+            className="text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950"
             motionProps={{ 
                 variants: {
                     enter: { opacity: 1, x: 0, duration: 0.3 },
