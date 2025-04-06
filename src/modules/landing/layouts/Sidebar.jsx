@@ -12,18 +12,29 @@ import {
   Image
 } from "@heroui/react";
 import { useAuth } from '../../auth/providers/AuthProvider';
+import { getUser } from "../../auth/service/user.service";
 import { Logout } from "../../global/components/Components";
+import ProfileDrawer from "../../adminEvents/components/ProfileDrawer";
 
 export default function Sidebar() {
     const { credentials } = useAuth();
     const [events, setEvents] = useState([]);
+    const [user, setUser] = useState({});
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
+
+    const handleDrawerConfirm = ({ data }) => {
+        setUser(prev => ({ ...prev, ...data }));
+        setRefreshTrigger(prev => !prev); // ¡Invierte el valor para disparar el efecto!
+        setIsDrawerOpen(false);
+    };
+
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getEvents(credentials.email);
+                const data = await getEvents(sessionStorage.getItem("email"));
                 if (data) {
                     setEvents(data.result);
                     console.log(data)
@@ -37,11 +48,30 @@ export default function Sidebar() {
             }
         };
         fetchData();
-    }, []);
+    }, [refreshTrigger]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const data = await getUser(sessionStorage.getItem("email"));
+                if (data) {
+                    setUser(data.result);
+                    console.log(data)
+                } else {
+                    setError("No se pudieron obtener los datos");
+                }
+            } catch (err) {
+                setError(err.message);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, [refreshTrigger]);
 
     return (
         <>
-            <div className="hidden lg:flex w-[220px] h-full flex flex-col justify-between rounded-r-2xl border border-bg-200 text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 dark:dark dark:border-bg-900">
+            <div className="hidden rounded-r-3xl lg:flex w-[220px] h-full flex flex-col justify-between shadow-xl text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 dark:dark dark:border-bg-900 dark:border ">
                 <div className="">
                     <Listbox aria-label="Menu" className="">
                         <ListboxSection className="px-2 text-text-50 dark:text-text-950">
@@ -57,7 +87,6 @@ export default function Sidebar() {
                                     <img src={logo} alt="" className="w-7 h-7"/>
                                     <p className="pl-2 text-xl font-bold">UpEvent</p>
                                 </div>
-                                <p className="text-xs break-words w-[200px] pt-2">{credentials.email}</p>
 
                             </ListboxItem>
                         </ListboxSection>
@@ -76,8 +105,7 @@ export default function Sidebar() {
                                 </div>
                             </ListboxItem>
                             <ListboxItem
-                            as={Link}
-                            to="/AdminEvents/Profile" viewTransition
+                            onPress={() => setIsDrawerOpen(true)}
                             key="Perfil"
                             href=""
                             className=""
@@ -184,9 +212,19 @@ export default function Sidebar() {
                     </div>
                 </div>
                 <div className="pt-6 pb-5 px-4 text-text-50 dark:text-text-950">
+                    <p className="text-base font-bold pb-1">{user.name + " " + user.lastname}</p>
+                    <p className="text-xs break-words w-[200px]">{credentials.email}</p>
+                    <Divider className="my-4"/>
                     <Logout/>
                 </div>
             </div>
+
+            <ProfileDrawer
+                data={user}
+                isOpen={isDrawerOpen}
+                onOpenChange={setIsDrawerOpen}
+                onConfirm={handleDrawerConfirm}
+            />
         </>
     ); 
 }

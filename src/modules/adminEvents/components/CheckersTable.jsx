@@ -19,6 +19,7 @@ import {
 import CheckersDrawer from "./CheckersDrawer";
 import { useAuth } from '../../auth/providers/AuthProvider';
 import CheckersModal from "./CheckersModal"
+import { Spinner } from "../../global/components/Components";
 
 export default function CheckersTable () {
     const { credentials } = useAuth();
@@ -192,6 +193,10 @@ export default function CheckersTable () {
                 return (
                     cellValue
                 );
+            case "email":
+                return (
+                    <p className="line-clamp-1 break-words xl:max-w-[300px] md:max-w-[150px] sm:max-w-[50px]">{cellValue}</p>
+                );
             case "status":
                 return (
                     <Tooltip 
@@ -201,6 +206,7 @@ export default function CheckersTable () {
                         placement="top">
                         <Button
                         aria-label="Button status"
+                        className="text-sm"
                         size="sm"
                         variant="light"
                         color={user.status === "activo" ? "success" : "danger" }
@@ -375,13 +381,12 @@ export default function CheckersTable () {
                 <Pagination
                     aria-label="Pagination tabla"
                     showControls
-                    classNames={{
-                      cursor: "font-bold",
-                    }}
+                    showShadow
+                    classNames={{ cursor: "font-bold" }}
                     color="primary"
                     isDisabled={hasSearchFilter}
                     page={page}
-                    total={pages}
+                    total={pages || 1}
                     variant="light"
                     onChange={setPage}
                 />
@@ -391,7 +396,7 @@ export default function CheckersTable () {
                         ? "Todos seleccionados"
                         : `${selectedKeys.size} de ${items.length} seleccionados`}
                     </span> */}
-                    <span className="text-text-500 text-sm">Total: {checkers.length} checadores</span>
+                    <span className="text-text-500 text-sm pr-6">Total: {checkers.length} checadores</span>
                 </div>
             </div>
         );
@@ -420,10 +425,9 @@ export default function CheckersTable () {
     return (
         <>
         
-        <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
-            <div className="flex-1 min-h-0 overflow-hidden px-2">
+        <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 shadow-xl rounded-3xl flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
+            <div className="flex-1 min-h-0 overflow-hidden px-12">
                 <Table 
-                    color="primary"
                     isHeaderSticky
                     aria-label="Table checkers"
                     bottomContent={bottomContent}
@@ -434,8 +438,7 @@ export default function CheckersTable () {
                     topContent={topContent}
                     topContentPlacement="outside"
                     onSelectionChange={setSelectedKeys}
-                    onSortChange={setSortDescriptor}
-                    className="px-6">
+                    onSortChange={setSortDescriptor}>
 
                     <TableHeader columns={headerColumns} className="bg-transparent">
                         {(column) => (
@@ -449,7 +452,12 @@ export default function CheckersTable () {
                         )}
                     </TableHeader>
 
-                    <TableBody className="bg-transparent" emptyContent={"No se encontraron checadores :("} items={sortedItems}>
+                    <TableBody 
+                        isLoading={loading}
+                        loadingContent={<Spinner/>}
+                        className="bg-transparent" 
+                        emptyContent={ checkers.length === 0 ? "No tienes checadores por ahora" : "No se encontraron checadores :("} 
+                        items={sortedItems}>
                         {(item) => (
                             <TableRow aria-label={item.indice} key={item.email}>
                             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
@@ -466,14 +474,6 @@ export default function CheckersTable () {
             isOpen={isDrawerOpen}
             onOpenChange={setIsDrawerOpen}
             onConfirm={handleDrawerConfirm}
-        />
-
-        <CheckersModal
-            isOpen={isModalOpen}
-            onClose={() => setIsModalOpen(false)}
-            onConfirm={handleModalConfirm}
-            isEnabled={selectedChecker.status === "activo"}
-            data={selectedChecker}
         />
 
         </>

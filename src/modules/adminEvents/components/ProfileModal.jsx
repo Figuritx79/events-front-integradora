@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UserX, X, UserCheck, CircleArrowDown, KeyRound, UserPlus } from "lucide-react";
+import { UserX, X, UserCheck, CircleArrowDown, KeyRound } from "lucide-react";
 import { 
     Button, 
     Modal,
@@ -10,50 +10,52 @@ import {
     useDraggable, 
 } from "@heroui/react";
 import { ButtonX, Spinner } from "../../global/components/Components";
-import { changeStatus } from "../../auth/service/user.service";
+import { changePassword } from "../../auth/service/user.service";
 import { updateProfile } from "../service/AdminEvent.service";
-import { createChecker } from "../service/Checkers.service";
 import { useAuth } from '../../auth/providers/AuthProvider';
 import { Toast } from "../../global/components/Toast";
 
-const CheckersModal = ({ 
+const ProfileModal = ({ 
     isOpen, 
     onClose, 
     onConfirm, 
-    action,
-    data = {},
+    isUpdateProfile,
+    profileData = {}, 
+    passwordData = {}, 
 }) => {
-    console.log(data)
-    const actionTitle = action === "create" ? "registrar" : data.status ? "inhabilitar" : "habilitar";
+    const currentData = isUpdateProfile ? profileData : passwordData;
+    const { credentials, setCredentials } = useAuth();
+    const title = isUpdateProfile ? "¿Desea actualizar su perfil?" : "¿Desea actualizar su contraseña?"
+    const description = isUpdateProfile ? "Asegúrese de que toda la información sea correcta antes de continuar. Una vez confirmado, los nuevos datos se reflejarán en su cuenta." : "Asegúrese de recordar la nueva contraseña para futuros inicios de sesión."
     const targetRef = React.useRef(null);
     const {moveProps} = useDraggable({targetRef, isDisabled: !isOpen});
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleChangeStatus = async () => {        
+    const handleChangePassword = async () => {        
         setIsSubmitting(true);
         try {
-            const result = await changeStatus(data.email);
+            const result = await changePassword(credentials.email, passwordData.password, passwordData.newPassword);
             
             if (result) {
                 Toast({
                     onConfirm: () => {onConfirm()},
                     color: "success",
-                    title: `Se ${ data.status ? "inhabilitó" : "habilitó"} el checador`,
-                    description: `Se ${ data.status ? "inhabilitó" : "habilitó"} el checador correctamente`
+                    title: "Se actualizó su contraseña",
+                    description: "Su contraseña se ha actualizado correctamente"
                 });
             } else {
                 Toast({
                     onConfirm: () => {onConfirm()},
                     color: "danger",
-                    title: `No se ${ data.status ? "inhabilitó" : "habilitó"} el checador`,
-                    description: "Algo salió mal :("
+                    title: "No se actualizó su contraseña",
+                    description: "Revise que haya mandado los datos correctamente"
                 });
             }
         } catch (error) {
             Toast({
                 onConfirm: () => {onConfirm()},
                 color: "danger",
-                title: `Ocurrió un error al ${actionTitle} el checador`,
+                title: "Ocurrió un error al actualizar su contraseña",
                 description: error.message
             });
             console.log(error)
@@ -62,23 +64,31 @@ const CheckersModal = ({
         }
     };
 
-    const handleCreateChecker = async () => {        
+    const handleUpdateProfile = async () => {        
         setIsSubmitting(true);
         try {
-            const result = await createChecker(data);
+            const result = await updateProfile({
+                currentEmail: credentials.email,
+                user: profileData // Envía el objeto completo
+            });
             
             if (result) {
+				setCredentials({
+                    email: profileData.email,
+                    role: credentials.role // Mantenemos el mismo rol
+                });
+                
                 Toast({
                     onConfirm: () => {onConfirm()},
                     color: "success",
-                    title: `Se registró el checador`,
-                    description: `Se registró el checador correctamente`
+                    title: "Se actualizó su perfil",
+                    description: "Su perfil se ha actualizado correctamente"
                 });
             } else {
                 Toast({
                     onConfirm: () => {onConfirm()},
                     color: "danger",
-                    title: `No se registró el checador`,
+                    title: "No se actualizó su perfil",
                     description: "Revise que haya mandado los datos correctamente"
                 });
             }
@@ -86,10 +96,9 @@ const CheckersModal = ({
             Toast({
                 onConfirm: () => {onConfirm()},
                 color: "danger",
-                title: `Ocurrió un error al registrar el checador`,
+                title: "Ocurrió un error al actualizar su perfil",
                 description: error.message
             });
-            console.log(error)
         } finally {
             setIsSubmitting(false);
         }
@@ -107,15 +116,13 @@ const CheckersModal = ({
             className="text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950">
             <ModalContent>
                 <ModalHeader {...moveProps} className="place-content-between pt-10 pb-6 text-4xl">
-                    <h1 className="text-xl font-bold">¿Desea {actionTitle} el siguiente checador?</h1>
+                    <h1 className="text-xl font-bold">{title}</h1>
                     <ButtonX onPress={onClose}></ButtonX>
                 </ModalHeader>
                 
                 <ModalBody>
                     <div className="text-sm space-y-3 pb-6 text-center">
-                        <p className="font-semibold">Nombre: <span className="font-normal break-words">{data.name + " " + data.lastname}</span></p>
-                        <p className="font-semibold">Correo: <span className="font-normal break-words">{data.email}</span></p>
-                        <p className="font-semibold">Teléfono: <span className="font-normal break-words">{data.phone}</span></p>
+                        <p>{description}</p>
                     </div>
                 </ModalBody>
                 
@@ -135,15 +142,14 @@ const CheckersModal = ({
                         color="secondary"
                         variant="ghost"
                         onPress={() => {
-                            action === "create" ? handleCreateChecker() : handleChangeStatus()
+                            isUpdateProfile ? handleUpdateProfile() : handleChangePassword()
                         }}
                         className="font-bold"
-                        startContent={isSubmitting ? "" : action === "create" ? 
-                            <UserPlus strokeWidth={2} className="w-5 h-5" /> : data.status ? 
-                            <UserX strokeWidth={2} className="w-5 h-5" /> : 
-                            <UserCheck strokeWidth={2} className="w-5 h-5" />  
+                        startContent={isSubmitting ? "" : isUpdateProfile ? 
+                            <CircleArrowDown strokeWidth={2} className="w-5 h-5" /> : 
+                            <KeyRound strokeWidth={2} className="w-5 h-5" />
                         }>
-                        {action === "create" ? "Registrar" : "Actualizar"}
+                        {isUpdateProfile ? "Guardar" : "Actualizar"}
                     </Button>
                 </ModalFooter>
             </ModalContent>
@@ -152,4 +158,4 @@ const CheckersModal = ({
     );
 };
 
-export default CheckersModal;
+export default ProfileModal;

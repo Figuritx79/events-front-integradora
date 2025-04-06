@@ -20,6 +20,7 @@ import EventsDrawer from "./EventsDrawer";
 import EventsModal from "./EventsModal"
 import { useAuth } from '../../auth/providers/AuthProvider';
 import { Link } from "react-router";
+import { Spinner } from "../../global/components/Components";
 
 export default function EventsTable () {
 	const { credentials } = useAuth();
@@ -30,6 +31,7 @@ export default function EventsTable () {
     const [events, setEvents] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [refreshTrigger, setRefreshTrigger] = useState(false);
 
     const INITIAL_VISIBLE_COLUMNS = ["indice", "name", "startDate", "endDate", "status", "actions"];
 
@@ -73,7 +75,7 @@ export default function EventsTable () {
             }
         };
         fetchData();
-    }, []);
+    }, [refreshTrigger]);
 
     // Manejadores para abrir el drawer con diferentes acciones
     const handleOpenCreate = () => {
@@ -113,6 +115,7 @@ export default function EventsTable () {
             // Lógica para actualizar un usuario existente
             console.log("Actualizar evento:", data);
         }
+        setRefreshTrigger(prev => !prev); // ¡Invierte el valor para disparar el efecto!
         // Cerrar el drawer después de la acción
         setIsDrawerOpen(false);
     };
@@ -201,11 +204,12 @@ export default function EventsTable () {
                         aria-label="Button status"
                         size="sm"
                         variant="light"
+                        className="text-sm"
                         color={event.status === "activo" ? "success" : "danger" }
                         startContent={event.status === "activo" ? (
-                            <CircleCheck aria-label="Checker icon activo" strokeWidth={2} className="w-5 h-5"/>
+                            <CircleCheck aria-label="Event icon activo" strokeWidth={2} className="w-5 h-5"/>
                                 ) : (
-                            <CircleX aria-label="Checker icon inactivo" strokeWidth={2} className="w-5 h-5"/>
+                            <CircleX aria-label="Event icon inactivo" strokeWidth={2} className="w-5 h-5"/>
                         )}
                         onPress={() => handleOpen(event)}>
                             {event.status}
@@ -223,7 +227,7 @@ export default function EventsTable () {
                     variant="light"
                     color="primary"
                     onPress={() => handleOpenRead(event)}>
-                    <Eye aria-label="Checker icon detalles" strokeWidth={2} className="w-5 h-5"/>
+                    <Eye aria-label="Event icon detalles" strokeWidth={2} className="w-5 h-5"/>
                     </Button>
                 </Tooltip>
                 <Tooltip content="Actualizar" placement="top" className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark" aria-label="Tooltip editar">
@@ -234,7 +238,7 @@ export default function EventsTable () {
                     variant="light"
                     color="primary"
                     onPress={() => handleOpenUpdate(event)}>
-                    <Pen aria-label="Checker icon actualizar" strokeWidth={2} className="w-5 h-5"/>
+                    <Pen aria-label="Event icon actualizar" strokeWidth={2} className="w-5 h-5"/>
                     </Button>
                 </Tooltip>
                 </div>
@@ -374,13 +378,12 @@ export default function EventsTable () {
                 <Pagination
                     aria-label="Pagination tabla"
                     showControls
-                    classNames={{
-                      cursor: "font-bold",
-                    }}
+                    showShadow
+                    classNames={{ cursor: "font-bold" }}
                     color="primary"
                     isDisabled={hasSearchFilter}
                     page={page}
-                    total={pages}
+                    total={pages || 1}
                     variant="light"
                     onChange={setPage}
                 />
@@ -390,7 +393,7 @@ export default function EventsTable () {
                         ? "Todos seleccionados"
                         : `${selectedKeys.size} de ${items.length} seleccionados`}
                     </span> */}
-                    <span className="text-text-500 text-sm">Total: {events.length} checadores</span>
+                    <span className="text-text-500 text-sm pr-6">Total: {events.length} eventos</span>
                 </div>
             </div>
         );
@@ -419,8 +422,8 @@ export default function EventsTable () {
     return (
         <>
         
-        <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
-            <div className="flex-1 min-h-0 overflow-hidden px-2">
+        <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 shadow-xl rounded-3xl flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
+            <div className="flex-1 min-h-0 overflow-hidden px-12">
                 <Table
                     isHeaderSticky
                     aria-label="Table checkers"
@@ -446,9 +449,14 @@ export default function EventsTable () {
                         )}
                     </TableHeader>
 
-                    <TableBody className="bg-transparent" emptyContent={"No se encontraron eventos :("} items={sortedItems}>
+                    <TableBody 
+                        isLoading={loading}
+                        loadingContent={<Spinner/>}
+                        className="bg-transparent" 
+                        emptyContent={ events.length === 0 ? "No tienes eventos por ahora" : "No se encontraron eventos :("} 
+                        items={sortedItems}>
                         {(item) => (
-                            <TableRow aria-label="" key={item.email}>
+                            <TableRow aria-label={item.indice} key={item.email}>
                             {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                             </TableRow>
                         )}

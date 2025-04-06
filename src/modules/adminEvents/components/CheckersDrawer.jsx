@@ -1,21 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { X, UserPlus, UserPen, UserX, UserCheck } from "lucide-react";
+import { UserCheck, UserPen, UserPlus, UserX } from "lucide-react";
 import { 
-    Select,
-    SelectItem,
     Button, 
     Input, 
     Drawer, 
     DrawerContent,
     DrawerHeader, 
     DrawerBody, 
-    DrawerFooter
+    DrawerFooter,
 } from "@heroui/react";
 import CheckersModal from "./CheckersModal"
-import { createChecker } from "../service/Checkers.service"; // Importar función de API
-import { useAuth } from '../../auth/providers/AuthProvider';
-import { getEvents } from "../service/Events.service";
-import { CheckersToast } from "./CheckersToast";
 import { ButtonX, Spinner } from '../../global/components/Components';
 
 const CheckersDrawer = ({
@@ -25,38 +19,16 @@ const CheckersDrawer = ({
     onOpenChange,
     onConfirm,
 }) => {
-    const { credentials } = useAuth();
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
-    const [events, setEvents] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [success, setSuccess] = useState(false);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const data = await getEvents(credentials.email);
-                if (data) {
-                    setEvents(data.result);
-                    setSuccess(true);
-                    console.log(data)
-                } else {
-                    setError("No se pudieron obtener los datos");
-                }
-            } catch (err) {
-                setError(err.message);
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
-
-    const handleModalConfirm = () => {
+    const handleModalConfirm = (confirmed) => {
         setIsModalOpen(false);
-        if(action === "read"){
-            handleClose();
+        if (confirmed) {
+            onConfirm({ data: formData }); // Pasa los datos actualizados
+            onOpenChange(false); // Cierra el drawer solo después de confirmar
+            if(action === "read"){
+                handleClose();
+            }
         }
     };
 
@@ -65,7 +37,6 @@ const CheckersDrawer = ({
         lastname: "",
         email: "",
         phone: "",
-        idEvent: ""
     });
 
     // Resetear datos al abrir/cerrar el drawer
@@ -76,10 +47,9 @@ const CheckersDrawer = ({
                 lastname: data.lastname || "",
                 email: data.email || "",
                 phone: data.phone || "",
-                idEvent: ""
             });
         }
-    }, [isOpen, data.name, data.lastname, data.email, data.phone]);
+    }, [isOpen, data]);
 
     const handleInputChange = (field, value) => {
         setFormData(prev => ({
@@ -90,6 +60,7 @@ const CheckersDrawer = ({
 
     const handleClose = () => {
         onOpenChange(false);
+
         // Resetear a los valores originales
         setFormData({
             name: data.name || "",
@@ -99,47 +70,10 @@ const CheckersDrawer = ({
         });
     };
 
-    const handleSubmit = async () => {
-        if (action !== "create") return;
-        
-        setIsSubmitting(true);
-        
-        try {
-            const result = await createChecker(credentials.email, formData);
-            
-            if (result) {
-                CheckersToast({
-                    onConfirm: () => {
-                        onConfirm({
-                            action,
-                            data: formData
-                        });
-                        handleClose();
-                    },
-                    action: "create",
-                    isSuccess: true
-                });
-            } else {
-                // Esto maneja casos donde la API devuelve un status diferente a 200
-                CheckersToast({
-                    action: "create",
-                    isSuccess: false
-                });
-            }
-        } catch (error) {
-            CheckersToast({
-                action: "create",
-                isSuccess: false,
-                errorMessage: error.message // Pasa el mensaje de error específico
-            });
-        } finally {
-            setIsSubmitting(false);
-        }
-    };
-
     const actionConfig = {
         create: {
             title: "Registrar checador",
+            description: "Puede agregar nuevos checadores en cualquier momento.",
             icon: <UserPlus strokeWidth={2} className="w-5 h-5" />,
             buttonLabel: "Registrar",
             placeholders: {
@@ -151,6 +85,7 @@ const CheckersDrawer = ({
         },
         update: {
             title: "Actualizar checador",
+            description: "Puede modificar todos los checadores existentes de la tabla.",
             icon: <UserPen strokeWidth={2} className="w-5 h-5" />,
             buttonLabel: "Actualizar",
             placeholders: {
@@ -162,11 +97,12 @@ const CheckersDrawer = ({
         },
         read: {
             title: "Detalles del checador",
+            description: "Puede ver todos los detalles de sus checadores almacenados en cualquier momento.",
             placeholders: {}
         }
     };
 
-    const { title: actionTitle, icon, buttonLabel, placeholders } = actionConfig[action];
+    const { title: actionTitle, description, icon, buttonLabel, placeholders } = actionConfig[action];
 
     return (
         <>
@@ -180,9 +116,23 @@ const CheckersDrawer = ({
             className="text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950"
             motionProps={{ 
                 variants: {
-                    enter: { opacity: 1, x: 0, duration: 0.3 },
-                    exit: { opacity: 0, x: 100, duration: 0.3 },
-                },
+                    enter: {
+                        x: 0,
+                        opacity: 1,
+                        transition: {
+                            x: { type: "spring", stiffness: 300, damping: 30 },
+                            opacity: { duration: 0.2 }
+                        }
+                    },
+                    exit: {
+                        x: 100,
+                        opacity: 0,
+                        transition: {
+                            duration: 0.3,
+                            ease: "easeIn"
+                        }
+                    }
+                }
             }}>
             <DrawerContent>
                 <DrawerHeader className="place-content-between pt-10 pb-6 text-4xl">
@@ -192,8 +142,12 @@ const CheckersDrawer = ({
 
                 <DrawerBody>
                     <div className="flex-col items-center justify-center">
+                        <div className="text-sm font-semibold pb-6">
+                            <p>{description}</p>
+                        </div>
+
                         <Input
-                            className="w-full pb-3"
+                            className="w-full py-3 pt-6"
                             size="md"
                             radius="md"
                             variant="bordered"
@@ -204,6 +158,7 @@ const CheckersDrawer = ({
                             isReadOnly={action === 'read'}
                             onValueChange={(value) => handleInputChange('name', value)}
                             labelPlacement="outside"
+                            classNames={{ label: "font-bold" }}
                             isRequired={action !== 'read'}
                         />
 
@@ -219,6 +174,7 @@ const CheckersDrawer = ({
                             isReadOnly={action === 'read'}
                             onValueChange={(value) => handleInputChange('lastname', value)}
                             labelPlacement="outside"
+                            classNames={{ label: "font-bold" }}
                             isRequired={action !== 'read'}
                         />
 
@@ -234,6 +190,7 @@ const CheckersDrawer = ({
                             isReadOnly={action === 'read'}
                             onValueChange={(value) => handleInputChange('email', value)}
                             labelPlacement="outside"
+                            classNames={{ label: "font-bold" }}
                             isRequired={action !== 'read'}
                         />
 
@@ -249,65 +206,40 @@ const CheckersDrawer = ({
                             isReadOnly={action === 'read'}
                             onValueChange={(value) => handleInputChange('phone', value)}
                             labelPlacement="outside"
+                            classNames={{ label: "font-bold" }}
                             isRequired={action !== 'read'}
                         />
-                        {action === 'create' && (
-                            <Select
-                                aria-label="Select eventos"
-                                label="Evento"
-                                labelPlacement="outside"
-                                isRequired
-                                disallowEmptySelection
-                                className="w-full"
-                                selectionMode="single"
-                                variant="bordered"
-                                selectedKeys={formData.idEvent ? [formData.idEvent] : []}
-                                onSelectionChange={(keys) => {
-                                    const selectedKey = Array.from(keys)[0];
-                                    handleInputChange('idEvent', selectedKey);
-                                }}
-                                classNames={{
-                                    popoverContent: "text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950", // Estilo para el popover
-                                    //value: "text-primario-500 font-bold" // Estilo para el valor seleccionado
-                                }}>
-                                {events.map((event) => (
-                                    <SelectItem key={event.id} value={event.id} className="text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950">
-                                        {event.name}
-                                    </SelectItem>
-                                ))}
-                            </Select>
-                        )}
                     </div>
                 </DrawerBody>
 
                 <DrawerFooter>
                     <div className="flex justify-between w-full items-center gap-4">
-                    {action !== 'create' && (
-                        <Button 
-                            fullWidth
-                            variant="bordered"
-                            color={data.status === "activo" ? "danger" : "success"}
-                            onPress={() => setIsModalOpen(true)}
-                            startContent={ data.status  === "activo" ? 
-                                <UserX strokeWidth={2} className="w-5 h-5"/> 
-                                : <UserCheck strokeWidth={2} className="w-5 h-5"/>
-                            }>
-                            { data.status === "activo" ? "Inhabilitar" : "Habilitar"}
-                        </Button>
-                    )}
-                    {action !== 'read' && (
-                        <Button 
-                            isLoading={isSubmitting}
-                            spinner={<Spinner/>}
-                            fullWidth
-                            color="secondary"
-                            variant="ghost"
-                            onPress={handleSubmit}
-                            className="font-bold"
-                            startContent={isSubmitting ? "" : icon}>
-                            {buttonLabel}
-                        </Button>
-                    )}
+                        {action !== 'create' && (
+                            <Button 
+                                className="font-bold"
+                                fullWidth
+                                variant="bordered"
+                                color={data.status === "activo" ? "danger" : "success"}
+                                onPress={() => setIsModalOpen(true)}
+                                startContent={ data.status  === "activo" ? 
+                                    <UserX strokeWidth={2} className="w-5 h-5"/> 
+                                    : <UserCheck strokeWidth={2} className="w-5 h-5"/>
+                                }>
+                                { data.status === "activo" ? "Inhabilitar" : "Habilitar"}
+                            </Button>
+                        )}
+                        {action !== 'read' && (
+                            <Button 
+                                spinner={<Spinner/>}
+                                fullWidth
+                                color="secondary"
+                                variant="bordered"
+                                onPress={() => setIsModalOpen(true)}
+                                className="font-bold"
+                                startContent={icon}>
+                                {buttonLabel}
+                            </Button>
+                        )}
                     </div>
                 </DrawerFooter>
             </DrawerContent>
@@ -315,10 +247,10 @@ const CheckersDrawer = ({
 
         <CheckersModal
             isOpen={isModalOpen}
-            onClose={handleModalConfirm}
-            onConfirm={handleModalConfirm}
-            isEnabled={data.status === "activo"}
-            data={data}
+            onClose={() => handleModalConfirm(false)}
+            onConfirm={() => handleModalConfirm(true)}
+            action={action}
+            data={formData}
         />
         </>
     );

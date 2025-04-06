@@ -18,6 +18,25 @@ export const AuthProvider = ({ children }) => {
 		  : null;
 	});
 
+	const updateCredentials = (newCredentials) => {
+        setCredentials(prev => {
+            const updated = {
+                ...prev,
+                ...newCredentials
+            };
+            
+            // Actualizar sessionStorage
+            if (newCredentials.email) {
+                sessionStorage.setItem('email', newCredentials.email);
+            }
+            if (newCredentials.role) {
+                sessionStorage.setItem('role', newCredentials.role.toString());
+            }
+            
+            return updated;
+        });
+    };
+
 	const login = async ({ email, password }) => {
 		try {
 			const requestLogin = await api.post('/auth/login', JSON.stringify({ email, password }));
@@ -41,5 +60,5 @@ export const AuthProvider = ({ children }) => {
 		sessionStorage.removeItem('email');
 		navigate('/login');
 	};
-	return <AuthContext.Provider value={{ logout, login, credentials, setCredentials }}>{children}</AuthContext.Provider>;
+	return <AuthContext.Provider value={{ logout, login, credentials, setCredentials: updateCredentials  }}>{children}</AuthContext.Provider>;
 };

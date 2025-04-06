@@ -52,8 +52,8 @@ createRoot(document.getElementById('root')).render(
 		<HeroUIProvider  locale="es-ES">
 		<main className='dark:dark text-foreground bg-background'>
 			<ToastProvider
-			placement="bottom-left"
-			toastOffset={75}
+			placement="bottom-center"
+			toastOffset={0}
 			toastProps={{
 				classNames: {
 					closeButton: "opacity-100 absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-none shadow-none",
