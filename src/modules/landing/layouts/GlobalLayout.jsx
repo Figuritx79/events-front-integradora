@@ -4,7 +4,7 @@ import { Footer } from '../components/Footer';
 import { Link } from 'react-router';
 export const GlobalLayout = ({ children }) => {
 	return (
-		<div className="bg-[#0D0D0D]">
+		<div className="text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
 			{/* HEADER */}
 			<Navbar className="dark:bg-[rgba(29, 22, 29, 0.4)] bg-[230,230,230, 0.4]">
 				<NavbarBrand>

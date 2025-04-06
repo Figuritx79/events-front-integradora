@@ -44,10 +44,10 @@ const PersonalAdminForm = () => {
 	return (
 		<Form className="w-[432px] h-40 flex justify-center items-center mt-28" onSubmit={handleSubmit(onSubmit)}>
 			<div>
-				<p className="text-center dark:text-text-50 text-text-950 text-sm">
+				<p className="text-center text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 text-sm">
 					Último paso: crea tus credenciales de acceso
 				</p>
-				<p className="text-center dark:text-text-50 text-text-950 text-sm">acceso</p>
+				<p className="text-center text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 text-sm">acceso</p>
 			</div>
 			<div>
 				<Input

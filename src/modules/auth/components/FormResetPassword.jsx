@@ -47,10 +47,10 @@ export const FormResetPassword = () => {
 			onSubmit={handleSubmit(onSubmit)}
 		>
 			<div className="flex justify-center items-center flex-col gap-4">
-				<h1 className="dark:text-text-50 text-text-950 text-center md:text-2xl text-xl font-bold">
+				<h1 className="text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 text-center md:text-2xl text-xl font-bold">
 					Restablece tu contraseña
 				</h1>
-				<p className="text-xs dark:text-text-50 text-text-950 font-normal text-center">
+				<p className="text-xs text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 font-normal text-center">
 					Ingresa una nueva contraseña para tu cuenta
 				</p>
 			</div>
@@ -91,7 +91,7 @@ export const FormResetPassword = () => {
 						],
 						label: ['dark:text-text-50 text-text-950', 'font-bold'],
 					}}
-					color="secondary"
+					color="primary"
 					size="lg"
 					name="password"
 				/>

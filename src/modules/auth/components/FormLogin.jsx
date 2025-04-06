@@ -6,6 +6,7 @@ import { partialUser } from '../../global/schemas/user.schema';
 import { AlertAnimate } from '../../global/components/AlertAnimate';
 import { useAuth } from '../providers/AuthProvider';
 import { useNavigate } from 'react-router';
+import { Spinner } from '../../global/components/Components';
 export const FormLogin = () => {
 	const [isVisble, setIsVisible] = React.useState(false);
 	const visibility = () => setIsVisible(!isVisble);
@@ -29,7 +30,7 @@ export const FormLogin = () => {
 		const { email, password } = values;
 		const validAuth = await login({ email, password });
 		if (validAuth) {
-			navigate('/dashboard-admin-event');
+			navigate('/AdminEvents');
 			return;
 		}
 		setIsValidForm(!isValidForm);
@@ -39,7 +40,7 @@ export const FormLogin = () => {
 		return;
 	};
 	return (
-		<Form className="mt-8  flex justify-center items-center" onSubmit={handleSubmit(onSubmit)}>
+		<Form className="mt-8  flex justify-center items-center text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950" onSubmit={handleSubmit(onSubmit)}>
 			<div>
 				<Input
 					{...register('email')}
@@ -48,21 +49,21 @@ export const FormLogin = () => {
 					label="Correo"
 					placeholder="joeDoe@gmail.com"
 					isRequired
-					endContent={<Mail className="dark:text-text-50 text-accent-600" />}
+					endContent={<Mail className="text-secondary" />}
 					errorMessage="Ingres un correo valido"
 					variant="bordered"
 					classNames={{
 						inputWrapper: [
 							'w-80',
 							'bg-transparent',
-							'dark:text-text-50 text-text-950',
+							'text-text-50 dark:text-text-950',
 							'dark:border-secodary-300 border-secondary-600',
 							'backdrop-blur-xl',
 							'group-data-[focus=true]:border-secondary-500',
 						],
-						label: ['dark:text-text-50 text-text-950', 'font-bold'],
+						label: ['font-bold'],
 					}}
-					color="success"
+					color="secondary"
 					size="lg"
 				/>
 			</div>
@@ -72,7 +73,7 @@ export const FormLogin = () => {
 					variant="bordered"
 					isRequired
 					labelPlacement="outside"
-					color="success"
+					color="secondary"
 					placeholder="****"
 					label="Contraseña"
 					endContent={
@@ -95,12 +96,12 @@ export const FormLogin = () => {
 							'w-80',
 							'shadow-xl',
 							'bg-transparent',
-							'dark:text-text-50 text-text-950',
+							'text-text-50 dark:text-text-950',
 							'dark:border-secodary-300 border-secondary-600',
 							'backdrop-blur-xl',
 							'group-data-[focus=true]:border-secondary-500',
 						],
-						label: ['dark:text-text-50 text-text-950', 'font-bold'],
+						label: ['font-bold'],
 					}}
 					size="lg"
 				/>
@@ -120,19 +121,7 @@ export const FormLogin = () => {
 				type="submit"
 				isLoading={isLoading}
 				spinner={
-					<svg
-						className="animate-spin h-5 w-5 text-current"
-						fill="none"
-						viewBox="0 0 24 24"
-						xmlns="http://www.w3.org/2000/svg"
-					>
-						<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-						<path
-							className="opacity-75"
-							d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-							fill="currentColor"
-						/>
-					</svg>
+					<Spinner/>
 				}
 			>
 				{isLoading ? 'Validando' : 'Iniciar Sesion'}
