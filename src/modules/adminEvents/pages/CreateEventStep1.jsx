@@ -4,7 +4,7 @@ import { CircleUser, House, Users, MapPinned, ImageUp, ImagePlus, CircleArrowRig
 import {useDateFormatter} from "@react-aria/i18n";
 import { NumberInput } from "@heroui/number-input";
 import { useForm } from 'react-hook-form';
-import { useNavigate } from 'react-router';
+import { Navigate, useNavigate } from 'react-router';
 import { addToast } from "@heroui/toast";
 import { api } from "../../global/config/api";
 import { useAuth } from '../../auth/providers/AuthProvider';
@@ -95,8 +95,13 @@ export default function CreateEventStep1() {
           }
         });
     
-        if (response.data.success) {
-          navigate('/next-step');
+        if (response.status === 200 || response.status === 201) {
+            navigate("/AdminEvents/CreateEvent/Images", {
+                state: {
+                    eventId: response.data.id, // Asegurar que el backend devuelva el ID
+                    newEvent: true
+                }
+            });
         }
     
       } catch (error) {
