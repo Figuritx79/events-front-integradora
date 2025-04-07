@@ -22,10 +22,11 @@ export default function CreateEventStep2() {
     const [previewUrls, setPreviewUrls] = useState([]);
     const [errorMessage, setErrorMessage] = useState("");
     const navigate = useNavigate(); // Agregar hook de navegación
-
+    const [nameEvent, setNameEvent] = useState('')
     console.log('Datos recibidos:', formData); 
 
     const handleLogoChange = (e) => {
+ 
         const file = e.target.files[0];
         if (!file) return;
 
@@ -74,6 +75,8 @@ export default function CreateEventStep2() {
     };
 
     const handleContinue = () => {
+        console.log(nameEvent);
+        
         if (previewUrls.length === 0 || !previewUrl) {
             addToast({
                 color: "danger",
@@ -95,7 +98,9 @@ export default function CreateEventStep2() {
             description: "Suba las imágenes requeridas para su evento",
             timeout: 6000,
         });
-        
+        const   url = window.location.search
+        const searchUrl = new URLSearchParams(url)
+        setNameEvent(searchUrl.get('event'))
         return () => {
             previewUrls.forEach(url => URL.revokeObjectURL(url));
             if (previewUrl) URL.revokeObjectURL(previewUrl);

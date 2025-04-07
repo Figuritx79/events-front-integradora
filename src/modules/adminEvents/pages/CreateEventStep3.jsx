@@ -366,8 +366,7 @@ export default function CreateEventStep3 () {
                     }
                     onChange={onRowsPerPageChange}
                     classNames={{
-                      popoverContent: "text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950", // Estilo para el popover
-                      //value: "text-primario-500 font-bold" // Estilo para el valor seleccionado
+                      popoverContent: "text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950", 
                   }}
                 >
                     <SelectItem key={5} value="5" className="text-text-50 bg-bg-50 capitalize dark:dark dark:text-text-950 dark:bg-bg-950">5</SelectItem >

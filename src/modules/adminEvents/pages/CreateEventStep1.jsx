@@ -45,14 +45,14 @@ export default function CreateEventStep1() {
             console.error("Formato de archivo no válido");
             e.target.value = null;
             setPreviewUrl(null);
-            setValue('frontPage', null); // Limpiar valor en el formulario
+            setValue('frontPage', null); 
             return;
         }
     
 
         const objectUrl = URL.createObjectURL(file);
         setPreviewUrl(objectUrl);
-        setValue('frontPage', file, { shouldValidate: true }); // Forzar validación
+        setValue('frontPage', file, { shouldValidate: true });
     };
 
     const onSubmit = async (data) => {
@@ -63,12 +63,10 @@ export default function CreateEventStep1() {
         const startDate = rangeValue.start.toDate(getLocalTimeZone()).toISOString();
         const endDate = rangeValue.end.toDate(getLocalTimeZone()).toISOString();
     
-        // Validación mejorada
         if (!data.frontPage || !data.frontPage.type.match('image/(jpeg|png)')) {
           throw new Error("Imagen inválida o no seleccionada");
         }
     
-        // Crear DTO con estructura que espera el backend
         const eventDto = {
             name: data.name,
             description: data.description,
@@ -77,7 +75,6 @@ export default function CreateEventStep1() {
             email: credentials.email
         };
     
-        // Crear Blob con tipo correcto
         const dtoBlob = new Blob([JSON.stringify(eventDto)], {
           type: 'application/json'
         });
@@ -85,7 +82,6 @@ export default function CreateEventStep1() {
         formData.append('eventDto', dtoBlob);
         formData.append('frontPage', data.frontPage);
     
-        // Verificar contenido del FormData
         console.log("Contenido de FormData:");
         formData.forEach((value, key) => console.log(key, value));
     
@@ -94,18 +90,18 @@ export default function CreateEventStep1() {
             'Content-Type': 'multipart/form-data'
           }
         });
-    
+        const replace = eventDto.name.split(' ').join('-')  ;
+        console.log(response);
         if (response.status === 200 || response.status === 201) {
-            navigate("/AdminEvents/CreateEvent/Images", {
+            navigate(`/AdminEvents/CreateEvent/Images?event=${replace}`, {
                 state: {
-                    eventId: response.data.id, // Asegurar que el backend devuelva el ID
+                    eventId: response.data.id,
                     newEvent: true
                 }
             });
         }
     
       } catch (error) {
-          // Mejorar mensaje de error
           const errorMessage = error.response?.data?.message || 
                               error.message || 
                               "Error al subir la imagen";
@@ -231,7 +227,7 @@ export default function CreateEventStep1() {
                                 <div className="grid grid-cols-3 gap-3">
                                     <div className="col-span-1">
                                         <Input
-                                       //     {...register('frontPage', { required: 'La imagen es obligatoria' })}
+                                    
                                             id="eventImage"
                                             name="frontPage"
                                             autoComplete="off"
