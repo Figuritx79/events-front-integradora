@@ -1,206 +1,263 @@
 import React, { useEffect, useState } from "react";
-import { parseDate, getLocalTimeZone, now } from "@internationalized/date";
 import { ImageUp, CircleArrowRight, CircleArrowLeft, Info, X } from "lucide-react";
-import { useDateFormatter } from "@react-aria/i18n";
+import { useNavigate, useLocation, useParams } from 'react-router';
 import { addToast } from "@heroui/toast";
-import { useLocation } from "react-router"; 
-
+import { api } from "../../global/config/api";
 import {
-  Button,
-  Input,
-  Tabs,
-  Tab, 
-  Image,
-  Tooltip
+    Button,
+    Input,
+    Image,
+    Tabs,
+    Tab,
+    Tooltip
 } from "@heroui/react";
-import { Link, useNavigate } from "react-router"; // Agregar useNavigate
+import { Link } from "react-router";
 
 export default function CreateEventStep2() {
-    const location = useLocation(); 
-    const formData = location.state?.formData || {};
-    const [previewUrl, setPreviewUrl] = useState(null);
-    const [previewUrls, setPreviewUrls] = useState([]);
-    const [errorMessage, setErrorMessage] = useState("");
-    const navigate = useNavigate(); // Agregar hook de navegación
+    const { slug } = useParams(); // Obtener el slug de la URL
+    const location = useLocation();
+    const { eventName, eventId } = location.state || {};
+    const [loading, setLoading] = useState(false);
+    const navigate = useNavigate();
 
-    console.log('Datos recibidos:', formData); 
+    // Estados para las previsualizaciones
+    const [logoPreview, setLogoPreview] = useState(null);
+    const [galleryPreviews, setGalleryPreviews] = useState([]);
+    const [galleryFiles, setGalleryFiles] = useState([]);
+
+    useEffect(() => {
+        if (!eventName || !slug) {
+            addToast({
+                color: "danger",
+                icon: <Info strokeWidth={2} className="w-5 h-5"/>,
+                title: "Error",
+                description: "No se recibió la información del evento",
+                timeout: 5000,
+            });
+            navigate('/AdminEvents/CreateEvent');
+            return;
+        }
+
+        addToast({
+            color: "primary",
+            icon: <Info strokeWidth={2} className="w-5 h-5"/>,
+            title: "Configurar Landing Page",
+            description: `Sube las imágenes para el evento: ${eventName}`,
+            timeout: 6000,
+        });
+        
+        return () => {
+            if (logoPreview) URL.revokeObjectURL(logoPreview);
+            galleryPreviews.forEach(url => URL.revokeObjectURL(url));
+        };
+    }, [eventName, slug]);
 
     const handleLogoChange = (e) => {
         const file = e.target.files[0];
         if (!file) return;
 
         if (!file.type.match('image/(jpeg|png)')) {
-            console.error("Formato no válido");
-            e.target.value = null;
-            setPreviewUrl(null);
-            return;
-        }
-
-        const objectUrl = URL.createObjectURL(file);
-        setPreviewUrl(objectUrl);
-    };
-
-    const handleGalleryChange = (e) => {
-        const files = Array.from(e.target.files);
-        
-        if (previewUrls.length + files.length > 3) {
-            setErrorMessage("Máximo 3 imágenes");
-            return;
-        }
-        
-        const validFiles = files.filter(file => 
-            file.type.match('image/(jpeg|png)')
-        );
-        
-        if (validFiles.length !== files.length) {
-            setErrorMessage("Solo JPG/PNG permitidos");
-            return;
-        }
-        
-        setErrorMessage("");
-        setPreviewUrls(prev => [
-            ...prev,
-            ...validFiles.map(file => URL.createObjectURL(file))
-        ]);
-    };
-
-    const removeImage = (index) => {
-        setPreviewUrls(prev => {
-            const newUrls = [...prev];
-            URL.revokeObjectURL(newUrls[index]);
-            newUrls.splice(index, 1);
-            return newUrls;
-        });
-    };
-
-    const handleContinue = () => {
-        if (previewUrls.length === 0 || !previewUrl) {
             addToast({
                 color: "danger",
                 icon: <Info strokeWidth={2} className="w-5 h-5"/>,
-                title: "Imágenes requeridas",
-                description: "Debe subir al menos una imagen principal y una de galería",
+                title: "Formato no válido",
+                description: "Solo se permiten imágenes JPEG o PNG",
+                timeout: 5000,
+            });
+            e.target.value = null;
+            return;
+        }
+
+        setLogoPreview(URL.createObjectURL(file));
+    };
+
+    const handleGalleryChange = (e) => {
+        const files = Array.from(e.target.files).slice(0, 3 - galleryFiles.length);
+        
+        const invalidFiles = files.filter(file => !file.type.match('image/(jpeg|png)'));
+        if (invalidFiles.length > 0) {
+            addToast({
+                color: "danger",
+                icon: <Info strokeWidth={2} className="w-5 h-5"/>,
+                title: "Archivos no válidos",
+                description: "Solo se permiten imágenes JPEG o PNG",
                 timeout: 5000,
             });
             return;
         }
-        navigate('/AdminEvents/CreateEvent/Checkers'); // Navegación controlada
+
+        const newPreviews = files.map(file => URL.createObjectURL(file));
+        setGalleryPreviews(prev => [...prev, ...newPreviews]);
+        setGalleryFiles(prev => [...prev, ...files]);
     };
 
-    useEffect(() => {
-        addToast({
-            color: "primary",
-            icon: <Info strokeWidth={2} className="w-5 h-5"/>,
-            title: "Etapa 2: Imágenes del evento",
-            description: "Suba las imágenes requeridas para su evento",
-            timeout: 6000,
-        });
-        
-        return () => {
-            previewUrls.forEach(url => URL.revokeObjectURL(url));
-            if (previewUrl) URL.revokeObjectURL(previewUrl);
-        };
-    }, []);
+    const removeGalleryImage = (index) => {
+        URL.revokeObjectURL(galleryPreviews[index]);
+        setGalleryPreviews(prev => prev.filter((_, i) => i !== index));
+        setGalleryFiles(prev => prev.filter((_, i) => i !== index));
+    };
 
-    return (
+    const handleSubmit = async () => {
+        if (!logoPreview || galleryPreviews.length === 0) {
+            addToast({
+                color: "danger",
+                icon: <Info strokeWidth={2} className="w-5 h-5"/>,
+                title: "Imágenes requeridas",
+                description: "Debes subir al menos el logo y una imagen de galería",
+                timeout: 5000,
+            });
+            return;
+        }
+
+        const formData = new FormData();
+        
+        try {
+            setLoading(true);
+            
+            // Obtener el logo del input
+            const logoInput = document.querySelector('input[name="logo"]');
+            formData.append('logo', logoInput.files[0]);
+            
+            // Asegurar 3 archivos de galería
+            for (let i = 0; i < 3; i++) {
+                formData.append(`gallery${i+1}`, galleryFiles[i] || new Blob());
+            }
+
+            // Usar el slug de la URL para la petición
+            const response = await api.post(
+                `/api/landing-page/landing/create/${slug}`,
+                formData,
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
+
+            if (response.data.success) {
+                navigate('/AdminEvents/CreateEvent/Checkers', { 
+                    state: { eventId, eventName } 
+                });
+            }
+
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 
+                                error.message || 
+                                "Error al crear la landing page";
+            
+            addToast({
+                color: "danger",
+                icon: <Info strokeWidth={2} className="w-5 h-5"/>,
+                title: "Error",
+                description: errorMessage,
+                timeout: 5000,
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+    return (      
         <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
             <div className="flex-1 min-h-0 flex flex-col px-2">
                 <div className="flex flex-col gap-4 pt-6">
                     <div className="flex justify-between gap-3 items-start">
                         <div>
-                            <h1 className="text-4xl font-bold pb-2">Registrar evento</h1>
-                            <p className="text-sm">Registrar imágenes del evento</p>
+                            <h1 className="text-4xl font-bold pb-2">Imágenes del Evento</h1>
+                            <p className="text-sm">Evento: {eventName}</p>
+                            <p className="text-xs text-primary-500">URL: /{slug}</p>
                         </div>
-                        <Tabs key="md" aria-label="Secciones" size="sm" radius="md" variant="bordered">
-                            <Tab key="evento" title="Evento" />
-                            <Tab key="checadores" title="Checadores" />
-                            <Tab key="talleres" title="Talleres" />
-                        </Tabs>
+                        <div>
+                            <Tabs key="md" aria-label="Tabs sizes" size="sm" radius="md" variant="bordered">
+                                <Tab key="evento" title="Evento" />
+                                <Tab key="checadores" title="Checadores" />
+                                <Tab key="talleres" title="Talleres" />
+                            </Tabs>
+                        </div>
                     </div>
                 </div>
                 
                 <div className="flex-1 min-h-0 overflow-hidden mt-12 pb-6">
                     <div className="h-full overflow-y-auto">
                         <div className="grid grid-cols-1 mx-2">
-                            <div>
-                                <Input
-                                    type="file"
-                                    className="w-full pb-6"
-                                    variant="bordered"
-                                    label="Imagen principal"
-                                    labelPlacement="outside"
-                                    size="md"
-                                    radius="md"
-                                    accept="image/*"
-                                    isRequired
-                                    onChange={handleLogoChange}
-                                    classNames={{
-                                        input: "cursor-pointer file:text-text-50 file:bg-bg-50 dark:file:text-text-950 dark:file:bg-bg-950",
-                                        inputWrapper: "border-dashed",
-                                    }}
-                                    startContent={<ImageUp strokeWidth={2} className="w-5 h-5" />}
-                                />
+                            <div className="grid grid-cols-3 gap-4">
+                                <div className="col-span-1">
+                                    <Input
+                                        name="logo"
+                                        type="file"
+                                        className="w-full pb-6"
+                                        variant="bordered"
+                                        label="Logo del evento"
+                                        labelPlacement="outside"
+                                        size="md"
+                                        radius="md"
+                                        accept=".jpg,.jpeg,.png"
+                                        isRequired
+                                        onChange={handleLogoChange}
+                                        classNames={{
+                                            input: "cursor-pointer file:text-text-50 file:bg-bg-50 dark:file:text-text-950 dark:file:bg-bg-950",
+                                            inputWrapper: "border-dashed",
+                                        }}
+                                        startContent={<ImageUp strokeWidth={2} className="w-5 h-5" />}
+                                    />
 
-                                <Input
-                                    type="file"
-                                    className="w-full pb-6 pt-3"
-                                    variant="bordered"
-                                    label="Galería (máx. 3)"
-                                    labelPlacement="outside"
-                                    size="md"
-                                    radius="md"
-                                    accept="image/*"
-                                    isRequired
-                                    multiple
-                                    isDisabled={previewUrls.length >= 3}
-                                    isInvalid={!!errorMessage}
-                                    errorMessage={errorMessage}
-                                    onChange={handleGalleryChange}
-                                    classNames={{
-                                        input: "cursor-pointer file:text-text-50 file:bg-bg-50 dark:file:text-text-950 dark:file:bg-bg-950",
-                                        inputWrapper: "border-dashed",
-                                    }}
-                                    startContent={<ImageUp strokeWidth={2} className="w-5 h-5" />}
-                                />
-
-                                <div className="flex space-x-10 mt-4">
-                                    {previewUrl && (
-                                        <div className="mb-4">
-                                            <p className="text-sm mb-2">Imagen principal:</p>
+                                    {logoPreview && (
+                                        <div className="mt-2">
+                                            <p className="text-sm mb-2">Vista previa:</p>
                                             <Image
-                                                src={previewUrl}
-                                                alt="Previsualización"
+                                                src={logoPreview}
+                                                alt="Logo del evento"
                                                 radius="md"
-                                                className="object-cover w-64 h-36"
+                                                className="object-cover w-full h-36"
                                             />
                                         </div>
                                     )}
-                                    
-                                    {previewUrls.length > 0 && (
-                                        <div className="flex-1">
-                                            <p className="text-sm mb-2">Galería:</p>
+                                </div>
+                                
+                                <div className="col-span-2">
+                                    <Input
+                                        type="file"
+                                        className="w-full pb-6"
+                                        variant="bordered"
+                                        label="Galería (máx. 3)"
+                                        labelPlacement="outside"
+                                        size="md"
+                                        radius="md"
+                                        accept=".jpg,.jpeg,.png"
+                                        multiple
+                                        onChange={handleGalleryChange}
+                                        isDisabled={galleryPreviews.length >= 3}
+                                        classNames={{
+                                            input: "cursor-pointer file:text-text-50 file:bg-bg-50 dark:file:text-text-950 dark:file:bg-bg-950",
+                                            inputWrapper: "border-dashed",
+                                        }}
+                                        startContent={<ImageUp strokeWidth={2} className="w-5 h-5" />}
+                                    />
+
+                                    {galleryPreviews.length > 0 && (
+                                        <div className="mt-4">
+                                            <p className="text-sm mb-2">Previsualización:</p>
                                             <div className="flex flex-wrap gap-4">
-                                                {previewUrls.map((url, index) => (
+                                                {galleryPreviews.map((url, index) => (
                                                     <div key={index} className="relative group">
                                                         <Image
                                                             src={url}
-                                                            alt={`Previsualización ${index + 1}`}
+                                                            alt={`Galería ${index + 1}`}
                                                             radius="md"
                                                             className="object-cover w-48 h-32"
                                                         />
-                                                        <div className="absolute top-1 right-1">
-                                                            <Tooltip content="Eliminar">
-                                                                <Button
-                                                                    isIconOnly
-                                                                    size="sm"
-                                                                    variant="flat"
-                                                                    color="danger"
-                                                                    onPress={() => removeImage(index)}
-                                                                >
-                                                                    <X className="w-4 h-4" />
-                                                                </Button>
-                                                            </Tooltip>
-                                                        </div>
+                                                        <Tooltip content="Eliminar">
+                                                            <Button
+                                                                isIconOnly
+                                                                size="sm"
+                                                                variant="flat"
+                                                                color="danger"
+                                                                className="absolute top-1 right-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                                                                onPress={() => removeGalleryImage(index)}
+                                                            >
+                                                                <X className="w-4 h-4" />
+                                                            </Button>
+                                                        </Tooltip>
                                                     </div>
                                                 ))}
                                             </div>
@@ -216,21 +273,22 @@ export default function CreateEventStep2() {
                                     size="md"
                                     radius="md"
                                     variant="light"
-                                    color="primary"
-                                    startContent={<CircleArrowLeft className="w-5 h-5" />}
+                                    color="default"
+                                    startContent={<CircleArrowLeft strokeWidth={2} className="w-5 h-5"/>}
                                 >
                                     Regresar
-                                </Button>
-                                
+                                </Button> 
                                 <Button 
+                                    onPress={handleSubmit}
+                                    className="font-bold"
                                     size="md"
                                     radius="md"
+                                    variant="ghost"
                                     color="primary"
-                                    variant="solid"
-                                    onPress={handleContinue} // Usar handler controlado
-                                    startContent={<CircleArrowRight className="w-5 h-5" />}
+                                    isLoading={loading}
+                                    startContent={!loading && <CircleArrowRight strokeWidth={2} className="w-5 h-5"/>}
                                 >
-                                    Continuar
+                                    {loading ? 'Guardando...' : 'Continuar'}
                                 </Button>
                             </div>
                         </div>

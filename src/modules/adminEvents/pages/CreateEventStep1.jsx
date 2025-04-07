@@ -56,66 +56,71 @@ export default function CreateEventStep1() {
     };
 
     const onSubmit = async (data) => {
-      const formData = new FormData();
+        const formData = new FormData();
+        
+        try {
+          setLoading(true);
+          const startDate = rangeValue.start.toDate(getLocalTimeZone()).toISOString();
+          const endDate = rangeValue.end.toDate(getLocalTimeZone()).toISOString();
       
-      try {
-        setLoading(true);
-        const startDate = rangeValue.start.toDate(getLocalTimeZone()).toISOString();
-        const endDate = rangeValue.end.toDate(getLocalTimeZone()).toISOString();
-    
-        // Validación mejorada
-        if (!data.frontPage || !data.frontPage.type.match('image/(jpeg|png)')) {
-          throw new Error("Imagen inválida o no seleccionada");
-        }
-    
-        // Crear DTO con estructura que espera el backend
-        const eventDto = {
-            name: data.name,
-            description: data.description,
-            startDate: startDate,
-            endDate: endDate,
-            email: credentials.email
-        };
-    
-        // Crear Blob con tipo correcto
-        const dtoBlob = new Blob([JSON.stringify(eventDto)], {
-          type: 'application/json'
-        });
-    
-        formData.append('eventDto', dtoBlob);
-        formData.append('frontPage', data.frontPage);
-    
-        // Verificar contenido del FormData
-        console.log("Contenido de FormData:");
-        formData.forEach((value, key) => console.log(key, value));
-    
-        const response = await api.post('/event/event', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
+          if (!data.frontPage || !data.frontPage.type.match('image/(jpeg|png)')) {
+            throw new Error("Imagen inválida o no seleccionada");
           }
-        });
-    
-        if (response.data.success) {
-          navigate('/next-step');
-        }
-    
-      } catch (error) {
-          // Mejorar mensaje de error
-          const errorMessage = error.response?.data?.message || 
-                              error.message || 
-                              "Error al subir la imagen";
-          
-          addToast({
-              color: "danger",
-              icon: <Info strokeWidth={2} className="w-5 h-5"/>,
-              title: "Error",
-              description: errorMessage,
-              timeout: 5000,
+      
+          const eventDto = {
+              name: data.name,
+              description: data.description,
+              startDate: startDate,
+              endDate: endDate,
+              email: credentials.email
+          };
+      
+          const dtoBlob = new Blob([JSON.stringify(eventDto)], {
+            type: 'application/json'
           });
-      } finally {
-          setLoading(false);
-      }
-  };
+      
+          formData.append('eventDto', dtoBlob);
+          formData.append('frontPage', data.frontPage);
+      
+          const response = await api.post('/event/event', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          });
+      
+          if (response.data.success) {
+            // Convertir nombre del evento a formato URL
+            const eventSlug = data.name
+              .toLowerCase() // Convertir a minúsculas
+              .replace(/\s+/g, '-') // Reemplazar espacios con guiones
+              .replace(/[^a-z0-9-]/g, ''); // Eliminar caracteres especiales
+            
+            // Redirigir a la URL correcta con el slug del evento
+            navigate(`/AdminEvents/CreateEvent/Images/${eventSlug}`, { 
+              state: { 
+                eventName: data.name,
+                eventId: response.data.data.id,
+                eventSlug: eventSlug
+              } 
+            });
+          }
+      
+        } catch (error) {
+            const errorMessage = error.response?.data?.message || 
+                                error.message || 
+                                "Error al subir la imagen";
+            
+            addToast({
+                color: "danger",
+                icon: <Info strokeWidth={2} className="w-5 h-5"/>,
+                title: "Error",
+                description: errorMessage,
+                timeout: 5000,
+            });
+        } finally {
+            setLoading(false);
+        }
+      };
 
     const showToast = (addToast) => {
         addToast({
