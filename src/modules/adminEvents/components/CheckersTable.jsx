@@ -2,19 +2,19 @@ import React, { useState, useEffect } from "react";
 import { getCheckers } from '../service/Checkers.service';
 import { Search, UserPlus, Eye, UserPen, UserCheck, UserX } from "lucide-react";
 import {
-  Select, 
-  SelectItem,
-  Tooltip,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Input,
-  Button,
-  Pagination,
-  Skeleton
+    Select, 
+    SelectItem,
+    Tooltip,
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    Input,
+    Button,
+    Pagination,
+    Skeleton
 } from "@heroui/react";
 import CheckersDrawer from "./CheckersDrawer";
 import { useAuth } from '../../auth/providers/AuthProvider';
@@ -103,6 +103,7 @@ export default function CheckersTable () {
     };
 
     const handleModalConfirm = () => {
+        setRefreshTrigger(prev => !prev); // ¡Invierte el valor para disparar el efecto!
         setIsModalOpen(false);
     };
 
@@ -474,6 +475,15 @@ export default function CheckersTable () {
             isOpen={isDrawerOpen}
             onOpenChange={setIsDrawerOpen}
             onConfirm={handleDrawerConfirm}
+        />
+
+        <CheckersModal
+            action="status"
+            status={selectedChecker.status === "activo"}
+            isOpen={isModalOpen}
+            onClose={() => setIsModalOpen(false)}
+            onConfirm={handleModalConfirm}
+            data={selectedChecker}
         />
 
         </>

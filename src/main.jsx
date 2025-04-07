@@ -36,12 +36,10 @@ import CreateEventStep2 from './modules/adminEvents/pages/CreateEventStep2.jsx';
 import CreateEventStep3 from './modules/adminEvents/pages/CreateEventStep3.jsx';
 import CreateEventStep4 from './modules/adminEvents/pages/CreateEventStep4.jsx';
 import CheckersAdminEvents from './modules/adminEvents/pages/Checkers.jsx';
-import ProfileAdminEvents from './modules/adminEvents/pages/Profile.jsx';
 
 import AdminPage from './modules/admin/pages/AdminPage.jsx';
 import HomeAdmin from './modules/admin/pages/Home.jsx';
 import UsersAdmin from './modules/admin/pages/Users.jsx';
-import ProfileAdmin from './modules/admin/pages/Profile.jsx';
 
 import UserPage from './modules/user/pages/UserPage.jsx';
 import HomeUser from './modules/user/pages/Home.jsx';
@@ -52,8 +50,8 @@ createRoot(document.getElementById('root')).render(
 		<HeroUIProvider  locale="es-ES">
 		<main className='dark:dark text-foreground bg-background'>
 			<ToastProvider
-			placement="bottom-center"
-			toastOffset={0}
+			placement="bottom-left"
+			toastOffset={80}
 			toastProps={{
 				classNames: {
 					closeButton: "opacity-100 absolute right-4 top-1/2 -translate-y-1/2 bg-transparent border-none shadow-none",
@@ -108,18 +106,16 @@ createRoot(document.getElementById('root')).render(
 						</Route>
 						<Route path="Events" element={<EventsAdminEvents/>} />
 						<Route path="Checkers" element={<CheckersAdminEvents/>} />
-						<Route path="Profile" element={<ProfileAdminEvents/>} />
 					</Route>
 
 					<Route path="/Admin" element={ <AdminPage/> } > {/* Falta ruta para admins (creo) */}
 						<Route index element={ <HomeAdmin/> } />
 						<Route path="Users" element={ <UsersAdmin/> } />
-						<Route path="Profile" element={ <ProfileAdmin/> } />
 					</Route>
 
 					<Route path="/User" element={ <UserPage/> } >
 						<Route index element={ <HomeUser/> } />
-						<Route path="Profile" element={ <ProfileUser/> } />
+						<Route path="Event" element={ <ProfileUser/> } />
 					</Route>	
 				</Routes>
 			</AuthProvider>

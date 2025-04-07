@@ -10,16 +10,30 @@ export const getCheckers = async (email) => {
 	}
 };	
 
-export const createChecker = async (checker) => {
+export const createChecker = async (assignedBy, checker) => {
 	console.log(checker)
 	const {name, lastname, phone, email} = checker
 
 	try {
-		const response = await api.post('/checker/register', JSON.stringify({name, lastname, phone, email}));
+		const response = await api.post('/checker/create', JSON.stringify({name, lastname, phone, email, assignedBy}));
 		return response.status === 200 || response.status === 201 ? response.data : false;
 	} catch (error) {
 		console.error(error);
 		return false;
 	}
 };	
+
+export const updateChecker = async (assignedBy, checker) => {
+	console.log(checker)
+	const {name, lastname, phone, email} = checker
+
+	try {
+		const response = await api.post('/checker/create', JSON.stringify({name, lastname, phone, email, assignedBy}));
+		return response.status === 200 || response.status === 201 ? response.data : false;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+};	
+
 

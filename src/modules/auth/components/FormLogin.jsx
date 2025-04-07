@@ -49,7 +49,7 @@ export const FormLogin = () => {
 					label="Correo"
 					placeholder="joeDoe@gmail.com"
 					isRequired
-					endContent={<Mail className="text-secondary" />}
+					endContent={<Mail className="text-primary" />}
 					errorMessage="Ingres un correo valido"
 					variant="bordered"
 					classNames={{
@@ -57,13 +57,13 @@ export const FormLogin = () => {
 							'w-80',
 							'bg-transparent',
 							'text-text-50 dark:text-text-950',
-							'dark:border-secodary-300 border-secondary-600',
+							'dark:border-secodary-300 border-primary-600',
 							'backdrop-blur-xl',
-							'group-data-[focus=true]:border-secondary-500',
+							'group-data-[focus=true]:border-primary-500',
 						],
 						label: ['font-bold'],
 					}}
-					color="secondary"
+					color="primary"
 					size="lg"
 				/>
 			</div>
@@ -73,7 +73,7 @@ export const FormLogin = () => {
 					variant="bordered"
 					isRequired
 					labelPlacement="outside"
-					color="secondary"
+					color="primary"
 					placeholder="****"
 					label="Contraseña"
 					endContent={
@@ -84,9 +84,9 @@ export const FormLogin = () => {
 							onClick={visibility}
 						>
 							{isVisble ? (
-								<EyeOff className="text-2xl dark:text-text-50 pointer-events-none text-accent-600" />
+								<EyeOff className="text-2xl dark:text-text-50 pointer-events-none text-primary-600" />
 							) : (
-								<Eye className="text-2xl pointer-events-none dark:text-text-50 text-accent-600" />
+								<Eye className="text-2xl pointer-events-none dark:text-text-50 text-primary-600" />
 							)}
 						</button>
 					}
@@ -97,9 +97,9 @@ export const FormLogin = () => {
 							'shadow-xl',
 							'bg-transparent',
 							'text-text-50 dark:text-text-950',
-							'dark:border-secodary-300 border-secondary-600',
+							'dark:border-primary-300 border-primary-600',
 							'backdrop-blur-xl',
-							'group-data-[focus=true]:border-secondary-500',
+							'group-data-[focus=true]:border-primary-500',
 						],
 						label: ['font-bold'],
 					}}
@@ -107,7 +107,7 @@ export const FormLogin = () => {
 				/>
 				<p className="text-right mt-1">
 					<Link
-						className="text-[10px] dark:text-secondary-300 text-secondary-600"
+						className="text-[10px] dark:text-primary-300 text-primary-600"
 						href="/recovery-password"
 						viewTransition
 					>
@@ -132,7 +132,7 @@ export const FormLogin = () => {
 				<hr className="w-[74px] border-1 dark:border-white  border-text-950 relative mt-[14px] ml-2" />
 			</div>
 			<Button
-				className="mt-2 dark:text-text-50 text-text-100 w-80  font-bold text-base shadow-lg shadow-secondary-500/40 dark:bg-secondary-400 bg-secondary-600"
+				className="mt-2 dark:text-text-50 text-text-100 w-80  font-bold text-base shadow-lg shadow-primary-500/40 dark:bg-primary-400 bg-primary-600"
 				size="lg"
 			>
 				<Link className="text-[#F2F2F2]" href="/admin-register" viewTransition>

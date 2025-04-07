@@ -20,24 +20,26 @@ const CheckersDrawer = ({
     onConfirm,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-
-    const handleModalConfirm = (confirmed) => {
-        setIsModalOpen(false);
-        if (confirmed) {
-            onConfirm({ data: formData }); // Pasa los datos actualizados
-            onOpenChange(false); // Cierra el drawer solo después de confirmar
-            if(action === "read"){
-                handleClose();
-            }
-        }
-    };
-
+    const [modalAction, setModalAction] = useState(action); // Usamos la prop action como valor inicial
     const [formData, setFormData] = useState({
         name: "",
         lastname: "",
         email: "",
         phone: "",
     });
+
+    const handleModalConfirm = (confirmed) => {
+        setIsModalOpen(false);
+        if (confirmed) {
+            onConfirm({ action: modalAction, data: formData });
+            onOpenChange(false); // Cerrar el drawer después de confirmar
+        }
+    };
+
+    const handleOpenModal = (actionType) => {
+        setModalAction(actionType);
+        setIsModalOpen(true);
+    };
 
     // Resetear datos al abrir/cerrar el drawer
     useEffect(() => {
@@ -60,8 +62,6 @@ const CheckersDrawer = ({
 
     const handleClose = () => {
         onOpenChange(false);
-
-        // Resetear a los valores originales
         setFormData({
             name: data.name || "",
             lastname: data.lastname || "",
@@ -220,12 +220,12 @@ const CheckersDrawer = ({
                                 fullWidth
                                 variant="bordered"
                                 color={data.status === "activo" ? "danger" : "success"}
-                                onPress={() => setIsModalOpen(true)}
-                                startContent={ data.status  === "activo" ? 
+                                onPress={() => handleOpenModal("status")}
+                                startContent={data.status === "activo" ? 
                                     <UserX strokeWidth={2} className="w-5 h-5"/> 
                                     : <UserCheck strokeWidth={2} className="w-5 h-5"/>
                                 }>
-                                { data.status === "activo" ? "Inhabilitar" : "Habilitar"}
+                                {data.status === "activo" ? "Inhabilitar" : "Habilitar"}
                             </Button>
                         )}
                         {action !== 'read' && (
@@ -234,7 +234,7 @@ const CheckersDrawer = ({
                                 fullWidth
                                 color="secondary"
                                 variant="bordered"
-                                onPress={() => setIsModalOpen(true)}
+                                onPress={() => handleOpenModal(action)}
                                 className="font-bold"
                                 startContent={icon}>
                                 {buttonLabel}
@@ -249,8 +249,9 @@ const CheckersDrawer = ({
             isOpen={isModalOpen}
             onClose={() => handleModalConfirm(false)}
             onConfirm={() => handleModalConfirm(true)}
-            action={action}
+            action={modalAction}
             data={formData}
+            status={data.status === "activo"}
         />
         </>
     );
