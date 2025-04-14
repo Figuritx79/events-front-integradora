@@ -29,9 +29,15 @@ export const FormLogin = () => {
 		setIsLoading(true);
 		const { email, password } = values;
 		const validAuth = await login({ email, password });
+		console.log(validAuth);
 		if (validAuth) {
-			navigate('/AdminEvents');
-			return;
+			if(validAuth === "SUPER_ADMIN"){
+					navigate('/Admin');
+			} else if(validAuth === "ADMIN_EVENTO"){
+				navigate('/AdminEvents');
+			} else if(validAuth === "NORMAL"){
+				navigate('/User');
+			}
 		}
 		setIsValidForm(!isValidForm);
 		setTitle('Credenciales Incorrectas');

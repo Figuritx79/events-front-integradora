@@ -115,7 +115,6 @@ createRoot(document.getElementById('root')).render(
 
 					<Route path="/User" element={ <UserPage/> } >
 						<Route index element={ <HomeUser/> } />
-						<Route path="Event" element={ <ProfileUser/> } />
 					</Route>	
 				</Routes>
 			</AuthProvider>

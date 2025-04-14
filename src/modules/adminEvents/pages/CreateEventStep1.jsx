@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {parseDate, getLocalTimeZone, parseZonedDateTime, now} from "@internationalized/date";
-import { CircleUser, House, Users, MapPinned, ImageUp, ImagePlus, CircleArrowRight, CircleArrowLeft, Info, ImportIcon} from "lucide-react";
+import { CircleUser, House, Users, MapPinned, ImageUp, ImagePlus, CircleArrowRight, CircleArrowLeft, Info, ImportIcon, CalendarDays} from "lucide-react";
 import {useDateFormatter} from "@react-aria/i18n";
 import { NumberInput } from "@heroui/number-input";
 import { useForm } from 'react-hook-form';
@@ -12,8 +12,7 @@ import {
     Button,
     Input,
     Image,
-    Tabs,
-    Tab, 
+    Progress,
     DateRangePicker,
     Textarea
 } from "@heroui/react";
@@ -92,7 +91,9 @@ export default function CreateEventStep1() {
         });
         const replace = eventDto.name.split(' ').join('-')  ;
         console.log(response);
+        const id = response.data.result.id
         if (response.status === 200 || response.status === 201) {
+            sessionStorage.setItem('event', id);
             navigate(`/AdminEvents/CreateEvent/Images?event=${replace}`, {
                 state: {
                     eventId: response.data.id,
@@ -136,25 +137,24 @@ export default function CreateEventStep1() {
     let formatter = useDateFormatter({ dateStyle: "long", timeStyle: "short", hour12: true });
 
     return (      
-        <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
-            <form onSubmit={handleSubmit(onSubmit)} className="flex-1 min-h-0 flex flex-col px-2">
-                <div className="flex flex-col gap-4 pt-6">
+        <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 shadow-xl rounded-3xl flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
+            <form onSubmit={handleSubmit(onSubmit)} className="flex-1 min-h-0 overflow-hidden px-12">
+                <div className="flex flex-col gap-4 pb-4 pt-6">
                     <div className="flex justify-between gap-3 items-start">
                         <div>
-                            <h1 className="text-4xl font-bold pb-2">Registrar evento</h1>
-                            <p className="text-sm">Registrar información general del evento</p>
-                        </div>
-                        <div>
-                            <Tabs key="md" aria-label="Tabs sizes" size="sm" radius="md" variant="bordered">
-                                <Tab key="evento" title="Evento" />
-                                <Tab key="checadores" title="Checadores" />
-                                <Tab key="talleres" title="Talleres" />
-                            </Tabs>
+                            <h1 className="text-4xl font-bold">Registrar información general</h1>
                         </div>
                     </div>
                 </div>
-                
-                <div className="flex-1 min-h-0 overflow-hidden mt-12 pb-6">
+                <Progress
+                    aria-label="Downloading..."
+                    className="w-full"
+                    color="primary"
+                    size="sm"
+                    value={25}
+                />
+
+                <div className="flex-1 min-h-0 overflow-hidden mt-8 pb-6">
                     <div className="h-full overflow-y-auto">
                         <div className="grid grid-cols-1 mx-2">
                             <div>
@@ -172,16 +172,17 @@ export default function CreateEventStep1() {
                                     onChange={setRangeValue}
                                     isRequired
                                     granularity="minute" 
-                                    calendarWidth={280} 
+                                    calendarWidth={300} 
                                     aria-label="Seleccionar rango de fechas"
                                     classNames={{
+                                        label: "font-bold",
                                         popoverContent: "text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 dark:dark",
                                         calendar: "text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 dark:dark",
                                         calendarContent: "text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 dark:dark",
                                     }}
                                 />
 
-                                <p className="text-default-500 text-xs pb-4">
+                                <p className="text-default-500 text-xs pb-6">
                                     Duración:{" "}
                                     {rangeValue ? formatter.formatRange(
                                         rangeValue.start.toDate(getLocalTimeZone()),
@@ -190,6 +191,7 @@ export default function CreateEventStep1() {
                                 </p>
 
                                 <Input
+                                    classNames={{ label: "font-bold" }}
                                     {...register('name', { required: 'El nombre es obligatorio' })}
                                     id="eventName"
                                     name="name"
@@ -208,6 +210,7 @@ export default function CreateEventStep1() {
                                 />
 
                                 <Textarea
+                                    classNames={{ label: "font-bold" }}
                                     {...register('description', { required: 'La descripción es obligatoria' })}
                                     id="eventDescription"
                                     name="description"
@@ -227,7 +230,6 @@ export default function CreateEventStep1() {
                                 <div className="grid grid-cols-3 gap-3">
                                     <div className="col-span-1">
                                         <Input
-                                    
                                             id="eventImage"
                                             name="frontPage"
                                             autoComplete="off"
@@ -242,6 +244,7 @@ export default function CreateEventStep1() {
                                             accept=".jpg, .jpeg, .png, image/jpeg, image/png"
                                             isRequired
                                             classNames={{
+                                                label: "font-bold",
                                                 input: "cursor-pointer file:text-text-50 file:bg-bg-50 dark:file:text-text-950 dark:file:bg-bg-950",
                                                 inputWrapper: "border-dashed",
                                             }}
@@ -255,7 +258,7 @@ export default function CreateEventStep1() {
                                         {previewUrl && (
                                             <div className="">
                                                 <div>
-                                                    <p className="text-sm mb-2">Vista previa de la portada:</p>
+                                                    <p className="text-sm mb-2 font-bold">Vista previa de la portada:</p>
                                                     <Image
                                                         src={previewUrl}
                                                         alt="Vista previa"

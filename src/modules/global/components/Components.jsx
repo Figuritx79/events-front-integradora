@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Eye, EyeClosed, KeyRound, LogOut, X } from "lucide-react";
+import { Eye, EyeClosed, KeyRound, LogOut, X, User } from "lucide-react";
 import { useAuth } from "../../auth/providers/AuthProvider";
 import { 
     Button, 
@@ -53,6 +53,31 @@ export const ButtonX = ({ onPress }) => {
                 onPress={onPress}
             >
                 <X strokeWidth={2} className="w-5 h-5"/>
+            </Button>
+        </Tooltip>
+    );
+};
+
+export const Profile = ({ onPress, isIconO }) => {
+    return (
+        <Tooltip 
+        isDisabled={!isIconO}
+        content="Perfil" 
+        className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark"
+        placement="top"
+        >
+            <Button 
+                isIconOnly={isIconO}
+                fullWidth
+                aria-label="Button User"
+                onPress={onPress}
+                className="font-bold"
+                size="md"
+                radius="md"
+                variant="ghost"
+                color="primary"
+                startContent={ isIconO ? "" : <User strokeWidth={2} className="w-5 h-5"/>}>
+                { isIconO ? <User strokeWidth={2} className="w-5 h-5"/> : "Tu perfil"}
             </Button>
         </Tooltip>
     );
@@ -206,14 +231,13 @@ export const ChangePassword = ({isIconO}) => {
             <Button
                 color="default"
                 className="font-bold"
-                fullWidth
                 aria-label="Button password"
                 isIconOnly={isIconO}
-                size="md"
-                variant="bordered"
+                size={isIconO ? "sm" : "md"}
+                variant={isIconO ? "light" : "bordered"}
                 onPress={onOpen}
                 startContent={ isIconO ? "" : <KeyRound strokeWidth={2} className="w-5 h-5"/>}>
-                { isIconO ? <KeyRound strokeWidth={2} className="w-5 h-5"/> : "Cambiar contraseña"}
+                { isIconO ? <KeyRound strokeWidth={2} className="w-5 h-5"/> : "Actualizar contraseña"}
             </Button>
         </Tooltip>
 

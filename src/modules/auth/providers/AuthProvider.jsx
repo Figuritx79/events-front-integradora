@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
 				sessionStorage.setItem('role', role);
 				sessionStorage.setItem('email', email);
 
-				return true;
+				return role;
 			}
 			throw new Error('Invalid Credentials');
 		} catch (error) {

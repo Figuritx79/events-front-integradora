@@ -21,7 +21,8 @@ const CheckersModal = ({
     onConfirm, 
     action,
     data = {},
-    status
+    status,
+    email
 }) => {
     console.log(data)
     const actionText = 
@@ -39,7 +40,7 @@ const CheckersModal = ({
         setIsSubmitting(true);
         try {
             let result;
-            let successMessage;
+            let successMessage; 
             let errorMessage;
             let description;
 
@@ -50,7 +51,11 @@ const CheckersModal = ({
                 errorMessage = "No se pudo registrar el checador";
               } 
               else if (action === "update") {
-                result = await updateChecker(data.email, data);
+                console.log(data)
+                result = await updateChecker({
+                    currentEmail: email,
+                    checker: data // Envía el objeto completo
+                });
                 successMessage = "Se actualizó el checador";
                 description = "Se ha actualizado el checador correctamente"
                 errorMessage = "No se pudo actualizar el checador";

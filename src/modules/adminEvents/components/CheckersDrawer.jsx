@@ -252,7 +252,9 @@ const CheckersDrawer = ({
             action={modalAction}
             data={formData}
             status={data.status === "activo"}
+            email={data.email}
         />
+        
         </>
     );
 };

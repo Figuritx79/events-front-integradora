@@ -93,7 +93,10 @@ const ProfileDrawer = ({
             <DrawerContent>
                 <DrawerHeader className="place-content-between pt-10 pb-6 text-4xl">
                     <h1 className="text-4xl font-bold">Tu perfil</h1>
-                    <ButtonX onPress={handleClose}/>
+                    <div className="space-x-2">
+                        <ChangePassword isIconO/>
+                        <ButtonX onPress={handleClose}/>
+                    </div>
                 </DrawerHeader>
 
                 <DrawerBody>
@@ -101,9 +104,7 @@ const ProfileDrawer = ({
                         <div className="text-sm font-semibold pb-6">
                             <p>Puede actualizar todos sus datos personales en cualquier momento.</p>
                         </div>
-                        <div className="pb-6">
-                            <ChangePassword isIconO={false}/>
-                        </div>
+                        
                         <div className="flex space-x-6">
                             <Input
                                 className="w-full py-3 pt-6"
@@ -180,6 +181,9 @@ const ProfileDrawer = ({
                             isRequired
                             classNames={{ label: "font-bold" }}
                         />
+                    </div>
+                    <div className="pt-4">
+                        <ChangePassword isIconO={false}/>
                     </div>
                 </DrawerBody>
 

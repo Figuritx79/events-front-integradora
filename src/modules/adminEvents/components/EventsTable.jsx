@@ -57,6 +57,8 @@ export default function EventsTable () {
         const fetchData = async () => {
             try {
                 const data = await getEvents(credentials.email);
+                console.log(credentials.email)
+                console.log(data)
                 if (data) {
                     const dataCount = data.result.map((event, index) => ({
                         ...event,
@@ -464,20 +466,13 @@ export default function EventsTable () {
                 </Table>
             </div>
         </div>
-
-        <EventsDrawer
-            action={drawerAction}
-            data={selectedEvent}
-            isOpen={isDrawerOpen}
-            onOpenChange={setIsDrawerOpen}
-            onConfirm={handleDrawerConfirm}
-        />
-
+        
         <EventsModal
+            action="status"
+            status={selectedEvent.status}
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             onConfirm={handleModalConfirm}
-            isEnabled={selectedEvent.status === "activo"}
             data={selectedEvent}
         />
 

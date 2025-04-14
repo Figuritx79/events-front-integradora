@@ -484,6 +484,7 @@ export default function CheckersTable () {
             onClose={() => setIsModalOpen(false)}
             onConfirm={handleModalConfirm}
             data={selectedChecker}
+            email={selectedChecker.email}
         />
 
         </>

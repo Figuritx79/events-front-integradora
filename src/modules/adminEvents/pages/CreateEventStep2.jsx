@@ -8,8 +8,7 @@ import { useLocation } from "react-router";
 import {
   Button,
   Input,
-  Tabs,
-  Tab, 
+  Progress,
   Image,
   Tooltip
 } from "@heroui/react";
@@ -108,23 +107,24 @@ export default function CreateEventStep2() {
     }, []);
 
     return (
-        <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
-            <div className="flex-1 min-h-0 flex flex-col px-2">
-                <div className="flex flex-col gap-4 pt-6">
+        <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 shadow-xl rounded-3xl flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
+            <div className="flex-1 min-h-0 overflow-hidden px-12">
+                <div className="flex flex-col gap-4 pb-4 pt-6">
                     <div className="flex justify-between gap-3 items-start">
                         <div>
-                            <h1 className="text-4xl font-bold pb-2">Registrar evento</h1>
-                            <p className="text-sm">Registrar imágenes del evento</p>
+                            <h1 className="text-4xl font-bold">Imágenes para su landing page</h1>
                         </div>
-                        <Tabs key="md" aria-label="Secciones" size="sm" radius="md" variant="bordered">
-                            <Tab key="evento" title="Evento" />
-                            <Tab key="checadores" title="Checadores" />
-                            <Tab key="talleres" title="Talleres" />
-                        </Tabs>
                     </div>
                 </div>
-                
-                <div className="flex-1 min-h-0 overflow-hidden mt-12 pb-6">
+                <Progress
+                    aria-label="Downloading..."
+                    className="w-full"
+                    color="primary"
+                    size="sm"
+                    value={50}
+                />
+
+                <div className="flex-1 min-h-0 overflow-hidden mt-8 pb-6">
                     <div className="h-full overflow-y-auto">
                         <div className="grid grid-cols-1 mx-2">
                             <div>
@@ -140,6 +140,7 @@ export default function CreateEventStep2() {
                                     isRequired
                                     onChange={handleLogoChange}
                                     classNames={{
+                                        label: "font-bold",
                                         input: "cursor-pointer file:text-text-50 file:bg-bg-50 dark:file:text-text-950 dark:file:bg-bg-950",
                                         inputWrapper: "border-dashed",
                                     }}
@@ -162,6 +163,7 @@ export default function CreateEventStep2() {
                                     errorMessage={errorMessage}
                                     onChange={handleGalleryChange}
                                     classNames={{
+                                        label: "font-bold",
                                         input: "cursor-pointer file:text-text-50 file:bg-bg-50 dark:file:text-text-950 dark:file:bg-bg-950",
                                         inputWrapper: "border-dashed",
                                     }}
@@ -171,7 +173,7 @@ export default function CreateEventStep2() {
                                 <div className="flex space-x-10 mt-4">
                                     {previewUrl && (
                                         <div className="mb-4">
-                                            <p className="text-sm mb-2">Imagen principal:</p>
+                                            <p className="text-sm mb-2 font-bold">Imagen principal:</p>
                                             <Image
                                                 src={previewUrl}
                                                 alt="Previsualización"
@@ -183,7 +185,7 @@ export default function CreateEventStep2() {
                                     
                                     {previewUrls.length > 0 && (
                                         <div className="flex-1">
-                                            <p className="text-sm mb-2">Galería:</p>
+                                            <p className="text-sm mb-2  font-bold">Galería:</p>
                                             <div className="flex flex-wrap gap-4">
                                                 {previewUrls.map((url, index) => (
                                                     <div key={index} className="relative group">
@@ -214,24 +216,13 @@ export default function CreateEventStep2() {
                                 </div>
                             </div>
                             
-                            <div className="flex justify-end gap-4 mt-8">
-                                <Button 
-                                    as={Link}
-                                    to="/AdminEvents/CreateEvent"
-                                    size="md"
-                                    radius="md"
-                                    variant="light"
-                                    color="primary"
-                                    startContent={<CircleArrowLeft className="w-5 h-5" />}
-                                >
-                                    Regresar
-                                </Button>
-                                
+                            <div className="flex justify-end gap-4 mt-8">                                
                                 <Button 
                                     size="md"
                                     radius="md"
                                     color="primary"
                                     variant="solid"
+                                    className="font-bold"
                                     onPress={handleContinue} // Usar handler controlado
                                     startContent={<CircleArrowRight className="w-5 h-5" />}
                                 >
