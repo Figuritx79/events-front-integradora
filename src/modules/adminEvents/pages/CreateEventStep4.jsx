@@ -417,6 +417,7 @@ export default function CreateEventStep4 () {
                             <SelectItem key="20" value="20" className="text-text-50 bg-bg-50 capitalize dark:dark dark:text-text-950 dark:bg-bg-950">20</SelectItem >
                         </Select>
                     <Button 
+                            isDisabled={workshops.length === 0}
                             onPress={onOpen}
                             className="font-bold text-text-950 bg-primario-500 dark:text-text-50"
                             size="md"

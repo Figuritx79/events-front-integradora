@@ -189,7 +189,6 @@ export default function CreateEventStep2() {
                                     accept="image/*"
                                     isRequired
                                     multiple
-                                    isDisabled={galleryFiles.length >= 3}
                                     isInvalid={!!errorMessage}
                                     errorMessage={errorMessage}
                                     onChange={handleGalleryChange}
@@ -219,25 +218,28 @@ export default function CreateEventStep2() {
                                             <p className="text-sm mb-2  font-bold">Galería:</p>
                                             <div className="flex flex-wrap gap-4">
                                                 {previewUrls.map((url, index) => (
-                                                    <div key={index} className="relative group">
+                                                    <div key={index} className="flex">
                                                         <Image
                                                             src={url}
                                                             alt={`Previsualización ${index + 1}`}
                                                             radius="md"
                                                             className="object-cover w-48 h-32"
                                                         />
-                                                        <div className="absolute top-1 right-1">
-                                                            <Tooltip content="Eliminar">
-                                                                <Button
-                                                                    isIconOnly
-                                                                    size="sm"
-                                                                    variant="flat"
-                                                                    color="danger"
-                                                                    onPress={() => removeImage(index)}
-                                                                >
-                                                                    <X className="w-4 h-4" />
-                                                                </Button>
-                                                            </Tooltip>
+                                                        <div>
+                                                                    <Tooltip 
+                                                                    content="Eliminar" 
+                                                                    placement="top" 
+                                                                    className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark"
+                                                                    >
+                                                                        <Button
+                                                                            isIconOnly
+                                                                            size="sm"
+                                                                            variant="light"
+                                                                            onPress={() => removeImage(index)}
+                                                                        >
+                                                                            <X strokeWidth={2} className="w-5 h-5"/>
+                                                                        </Button>
+                                                                    </Tooltip>
                                                         </div>
                                                     </div>
                                                 ))}
