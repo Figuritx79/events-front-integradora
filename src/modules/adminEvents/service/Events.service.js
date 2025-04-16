@@ -116,3 +116,20 @@ export const assignChecker = async (assignedBy, checkers, idEvent) => {
 			}
 		}
 };	
+
+
+export const createLandingPage = async ({formData, eventName}) => {
+    console.log(formData)
+    console.log(eventName)
+    try {
+        const response = await api.post(`/landing-page/landing/create/${eventName}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+        return response.status === 200 || response.status === 201 ? response.data : false;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+};	

@@ -42,17 +42,13 @@ export const updateWorkshop = async (formData) => {
     }
 };	
 
-export const changeStatus = async (formData) => {
-    console.log(formData)
-    try {
-        const response = await api.post('/event/event', formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-        return response.status === 200 || response.status === 201 ? response.data : false;
-    } catch (error) {
-        console.error(error);
-        return false;
-    }
+export const changeStatus = async (id) => {
+    console.log(id)
+	try {
+		const response = await api.patch('/workshop/status', JSON.stringify(id));
+		return response.status === 200 || response.status === 201 ? response.data : false;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
 };	

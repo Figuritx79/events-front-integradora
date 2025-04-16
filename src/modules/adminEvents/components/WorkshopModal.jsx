@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UserX, X, UserCheck, UserPlus, UserPen } from "lucide-react";
+import { CalendarX2, X, CalendarCheck2, CalendarArrowUp, Pen } from "lucide-react";
 import { 
     Button, 
     Modal,
@@ -25,6 +25,7 @@ const WorkshopModal = ({
 }) => {
     data.event = sessionStorage.getItem('event');
     console.log(data)
+    console.log(status)
     console.log(workshopImage)
     const actionText = 
     action === "create" ? "registrar" :
@@ -157,7 +158,7 @@ const WorkshopModal = ({
         <ModalBody>
           <div className="text-sm space-y-3 pb-6 text-start">
             <p className="font-semibold">Nombre: <span className="font-normal break-words">{data.name}</span></p>
-            <p className="font-semibold">Ponente: <span className="font-normal break-words">{data.speakerInfo?.speakerName}</span></p>
+            <p className="font-semibold">Ponente: <span className="font-normal break-words">{data.speakerInfo?.speaker_name || data.speakerName}</span></p>
             <p className="font-semibold">Capacidad: <span className="font-normal break-words">{data.capacity}</span></p>
             <p className="font-semibold">Hora: <span className="font-normal break-words">{data.hour}</span></p>
             <p className="font-semibold">Descripción: <span className="font-normal break-words">{data.description}</span></p>
@@ -190,9 +191,9 @@ const WorkshopModal = ({
             className="font-bold"
             startContent={
               isSubmitting ? null : 
-              action === "create" ? <UserPlus strokeWidth={2} className="w-5 h-5" /> : 
-              action === "status" ? (status ? <UserX strokeWidth={2} className="w-5 h-5" /> : <UserCheck strokeWidth={2} className="w-5 h-5" />) :
-              <UserPen strokeWidth={2} className="w-5 h-5" />
+              action === "create" ? <CalendarArrowUp strokeWidth={2} className="w-5 h-5" /> : 
+              action === "status" ? (status ? <CalendarX2 strokeWidth={2} className="w-5 h-5" /> : <CalendarCheck2 strokeWidth={2} className="w-5 h-5" />) :
+              <Pen strokeWidth={2} className="w-5 h-5" />
             }>
             {action === "create" ? "Registrar" : 
              action === "status" ? (status ? "Inhabilitar" : "Habilitar") : 

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { getCheckers } from '../service/Checkers.service';
-import { Search, X, UserPlus, Eye, UserPen, UserCheck, UserX, CircleArrowRight, CircleArrowLeft, } from "lucide-react";
+import { Search, X, CalendarArrowUp, Eye, Pen, CalendarCheck2, CalendarX2, CircleArrowRight, CircleArrowLeft, } from "lucide-react";
 import {
     Select, 
     SelectItem,
@@ -128,46 +128,15 @@ export default function CreateEventStep4 () {
       };
 
       const handleAction = async () => {
-        setIsSubmitting(true);
-        try {
-            let result;
-            let successMessage; 
-            let errorMessage;
-            let description;
-            const selectedArray = Array.from(selectedKeys);
-                result = await assignChecker(credentials.email, selectedArray, sessionStorage.getItem('event'));
-                successMessage = "Se asignaron los talleres";
-                description = "Se han asignado los talleres asignados correctamente"
-                errorMessage = "No se pudieron asignar los talleres";
-
-              if (result) {
                 Toast({
                   onConfirm:() => handleModalConfirm,
                   color: "success",
-                  title: successMessage,
-                  description: description
+                  title: "Se asignaron los talleres",
+                  description: "Se han asignado los talleres asignados correctamente"
                 });
-              } else {
-                Toast({
-                  onConfirm: () => handleModalConfirm,
-                  color: "danger",
-                  title: errorMessage,
-                  description: "Revise que haya mandado los datos correctamente"
-                });
-              }
-            } catch (error) {
-              Toast({
-                onConfirm: () => handleModalConfirm,
-                color: "danger",
-                title: `Error al asignar los talleres`,
-                description: error.message
-              });
-              console.error(error);
-            } finally {
-              setIsSubmitting(false);
               onClose();
-              navigate('/AdminEvents/CreateEvent/Workshops');
-            }
+              navigate('/AdminEvents/Events');
+            
           };
   
       // Manejador para confirmar acciones en el drawer
@@ -253,13 +222,9 @@ export default function CreateEventStep4 () {
                   return (
                       cellValue
                   );
-              case "name":
+              case "speaker":
                   return (
-                      cellValue
-                  );
-              case "email":
-                  return (
-                      <p className="line-clamp-1 break-words xl:max-w-[300px] md:max-w-[150px] sm:max-w-[50px]">{cellValue}</p>
+                        workshop.speakerInfo.speaker_name
                   );
               case "status":
                   return (
@@ -275,9 +240,9 @@ export default function CreateEventStep4 () {
                           variant="light"
                           color={workshop.status === "activo" ? "success" : "danger" }
                           startContent={workshop.status === "activo" ? (
-                              <UserCheck aria-label="Checker icon activo" strokeWidth={2} className="w-5 h-5"/>
+                              <CalendarCheck2 aria-label="Checker icon activo" strokeWidth={2} className="w-5 h-5"/>
                                   ) : (
-                              <UserX aria-label="Checker icon inactivo" strokeWidth={2} className="w-5 h-5"/>
+                              <CalendarX2 aria-label="Checker icon inactivo" strokeWidth={2} className="w-5 h-5"/>
                           )}
                           onPress={() => handleOpen(workshop)}>
                               {workshop.status}
@@ -306,7 +271,7 @@ export default function CreateEventStep4 () {
                       variant="light"
                       color="primary"
                       onPress={() => handleOpenUpdate(workshop)}>
-                      <UserPen aria-label="Checker icon actualizar" strokeWidth={2} className="w-5 h-5"/>
+                      <Pen aria-label="Checker icon actualizar" strokeWidth={2} className="w-5 h-5"/>
                       </Button>
                   </Tooltip>
                   </div>
@@ -381,7 +346,7 @@ export default function CreateEventStep4 () {
                             radius="md"
                             variant="ghost"
                             color="primary"
-                            startContent={<UserPlus strokeWidth={2} className="w-5 h-5"/>}>
+                            startContent={<CalendarArrowUp strokeWidth={2} className="w-5 h-5"/>}>
                             Registrar taller
                         </Button>
                     </div>
@@ -453,7 +418,6 @@ export default function CreateEventStep4 () {
                         </Select>
                     <Button 
                             onPress={onOpen}
-                            isDisabled={selectedKeys.size === 0}
                             className="font-bold text-text-950 bg-primario-500 dark:text-text-50"
                             size="md"
                             radius="md"
@@ -488,7 +452,6 @@ export default function CreateEventStep4 () {
                         wrapper: "after:bg-primario-500 after:text-background text-background",
                     },
                     }}
-                    selectionMode="multiple"
                     isHeaderSticky
                     aria-label="Table checkers"
                     bottomContent={bottomContent}
@@ -555,13 +518,13 @@ export default function CreateEventStep4 () {
               className="text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950">
               <ModalContent>
                 <ModalHeader {...moveProps} className="place-content-between pt-10 pb-6 text-4xl">
-                  <h1 className="text-xl font-bold">¿Desea continuar con el siguiente paso?</h1>
+                  <h1 className="text-xl font-bold">¿Desea terminar con la creación del evento?</h1>
                   <ButtonX onPress={onClose}></ButtonX>
                 </ModalHeader>
                 
                 <ModalBody>
                     <div className="text-sm space-y-3 pb-6 text-start">
-                        <p>Al continuar, los talleres serán asignados inmediatamente al evento que acaba de crear</p>
+                        <p>Al continuar, los talleres serán asignados inmediatamente al evento que acaba de crear. Así mismo, será redirigido a sus eventos</p>
                     </div>
                 </ModalBody>
                 

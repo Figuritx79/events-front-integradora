@@ -94,6 +94,7 @@ export default function CreateEventStep1() {
         const id = response.data.result.id
         if (response.status === 200 || response.status === 201) {
             sessionStorage.setItem('event', id);
+            sessionStorage.setItem('nameEvent', replace);
             navigate(`/AdminEvents/CreateEvent/Images?event=${replace}`, {
                 state: {
                     eventId: response.data.id,

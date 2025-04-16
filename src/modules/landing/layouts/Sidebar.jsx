@@ -103,7 +103,7 @@ export default function Sidebar() {
                                         aria-label="Button Inicio"
                                         size="sm"
                                         radius="sm"
-                                        variant="shadow"
+                                        variant="flat"
                                         color={location.pathname === "/AdminEvents" ? "primary" : ""}
                                         className={location.pathname === "/AdminEvents" ? "" : "text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900"}>
                                         <House strokeWidth={2} className="w-5 h-5"/>                                    
@@ -126,7 +126,7 @@ export default function Sidebar() {
                                         aria-label="Button Inicio"
                                         size="sm"
                                         radius="sm"
-                                        variant="shadow"
+                                        variant="flat"
                                         color={location.pathname.startsWith("/AdminEvents/Events") || location.pathname.startsWith("/AdminEvents/CreateEvent") ? "primary" : ""}
                                         className={location.pathname.startsWith("/AdminEvents/Events") || location.pathname.startsWith("/AdminEvents/CreateEvent") ? "" : "text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900"}>
                                         <MapPinned strokeWidth={2} className="w-5 h-5"/>                                    
@@ -149,7 +149,7 @@ export default function Sidebar() {
                                         aria-label="Button Inicio"
                                         size="sm"
                                         radius="sm"
-                                        variant="shadow"
+                                        variant="flat"
                                         color={location.pathname.startsWith("/AdminEvents/Checkers") ? "primary" : ""}
                                         className={location.pathname.startsWith("/AdminEvents/Checkers") ? "" : "text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900"}>
                                         <Users strokeWidth={2} className="w-5 h-5"/>                                    

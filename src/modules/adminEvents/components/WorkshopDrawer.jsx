@@ -28,6 +28,7 @@ const WorkshopDrawer = ({
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [modalAction, setModalAction] = useState(action); // Usamos la prop action como valor inicial
     const [formData, setFormData] = useState({
+        id: data.id,
         name: "",
         speakerName: "", // Cambiar a campo directo
         capacity: 1,
@@ -53,8 +54,9 @@ const WorkshopDrawer = ({
     useEffect(() => {
         if (isOpen) {
             setFormData({
+                id: data.id,
                 name: data.name || "",
-                speakerName: data.speakerInfo?.speakerName || "", // Extraer nombre del ponente
+                speakerName: data.speakerInfo?.speaker_name || "", // Extraer nombre del ponente
                 capacity: data.capacity || "",
                 description: data.description || "",
                 hour: data.hour || "",
@@ -81,8 +83,9 @@ const WorkshopDrawer = ({
     const handleClose = () => {
         onOpenChange(false);
         setFormData({
+            id: data.id,
             name: data.name || "",
-            speakerInfo: {speakerName: data.speakerName || ""},
+            speakerInfo: {speaker_name: data.speaker_name || ""},
             capacity: data.capacity || "",
             description: data.description || "",
             hour: data.hour || "",
@@ -127,7 +130,7 @@ const WorkshopDrawer = ({
             buttonLabel: "Actualizar",
             placeholders: {
                 name: data.name || "Nombre actual",
-                speakerName: data.speakerInfo?.speakerName || "Ponente actual",                capacity: data.capacity || "Capacidad actual",
+                speakerName: data.speakerInfo?.speaker_name || "Ponente actual",                capacity: data.capacity || "Capacidad actual",
                 description: data.description || "Descripción actual",
                 hour: data.hour || "Hora",
                 //image: data.image || "Imagen actual",
