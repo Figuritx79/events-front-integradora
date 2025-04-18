@@ -56,6 +56,39 @@ export const getEventByName = async (name) => {
 	}
 };	
 
+export const getLandingByEvent = async (id) => {
+	console.log(id)
+	try {
+		const response = await api.get(`/landing-page/landing/event/${id}`);
+		return response.status === 200 || response.status === 201 ? response.data : false;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+};	
+
+export const getCheckersByEvent = async (id) => {
+	console.log(id)
+	try {
+		const response = await api.get(`/checker/event/${id}`);
+		return response.status === 200 || response.status === 201 ? response.data : false;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+};	
+
+export const getEventById = async (id) => {
+	console.log(id)
+	try {
+		const response = await api.get(`/event/events/${id}`);
+		return response.status === 200 || response.status === 201 ? response.data : false;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+};	
+
 export const assignChecker = async (assignedBy, checkers, idEvent) => {
 	console.log(assignedBy)
 	checkers = Array.from(checkers)

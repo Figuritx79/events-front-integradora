@@ -10,7 +10,7 @@ import {
     useDraggable, 
 } from "@heroui/react";
 import { ButtonX, Spinner } from "../../global/components/Components";
-import { changeStatus } from "../../auth/service/user.service";
+import { changeStatus } from "../../adminEvents/service/Events.service";
 import { createChecker, updateChecker } from "../service/Checkers.service";
 import { useAuth } from '../../auth/providers/AuthProvider';
 import { Toast } from "../../global/components/Toast";

@@ -92,7 +92,7 @@ export default function CreateEventStep2() {
                 } finally {
                   setIsSubmitting(false);
                   onClose();
-                  navigate('/AdminEvents/CreateEvent/Checkers');
+                  navigate('/AdminEvents/CreateEvent/Checkers', { replace: true });
                 }
               };
 

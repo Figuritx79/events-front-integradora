@@ -268,7 +268,8 @@ const WorkshopDrawer = ({
                             isRequired={action !== 'read'}
                         />
 
-                        <Input
+                        {action !== "read" && (
+                            <Input
                             className="w-full pb-6  pt-3"
                             accept=".jpg, .jpeg, .png, image/jpeg, image/png"
                             size="md"
@@ -291,6 +292,8 @@ const WorkshopDrawer = ({
                                 <ImageUp strokeWidth={2} className="w-5 h-5" />
                             }
                         />
+                        )}
+                        
                         {previewUrl && (
                             <div className="pb-6">
                                 <p className="text-sm mb-2 font-bold">Vista previa:</p>

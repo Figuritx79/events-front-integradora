@@ -135,7 +135,8 @@ export default function CreateEventStep4 () {
                   description: "Se han asignado los talleres asignados correctamente"
                 });
               onClose();
-              navigate('/AdminEvents/Events');
+              window.location.reload();
+              navigate('/AdminEvents/Events', { replace: true });
             
           };
   

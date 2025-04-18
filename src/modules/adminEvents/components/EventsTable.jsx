@@ -19,10 +19,11 @@ import {
 import EventsDrawer from "./EventsDrawer";
 import EventsModal from "./EventsModal"
 import { useAuth } from '../../auth/providers/AuthProvider';
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Spinner } from "../../global/components/Components";
 
 export default function EventsTable () {
+    const navigate = useNavigate(); // Agregar hook de navegación
 	const { credentials } = useAuth();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -105,6 +106,7 @@ export default function EventsTable () {
     };
 
     const handleModalConfirm = () => {
+        setRefreshTrigger(prev => !prev); // ¡Invierte el valor para disparar el efecto!
         setIsModalOpen(false);
     };
 
@@ -228,7 +230,7 @@ export default function EventsTable () {
                     size="sm"
                     variant="light"
                     color="primary"
-                    onPress={() => handleOpenRead(event)}>
+                    onPress={() => navigate(`/AdminEvents/Event/${event.name}`)}>
                     <Eye aria-label="Event icon detalles" strokeWidth={2} className="w-5 h-5"/>
                     </Button>
                 </Tooltip>
@@ -469,7 +471,7 @@ export default function EventsTable () {
         
         <EventsModal
             action="status"
-            status={selectedEvent.status}
+            status={selectedEvent.status === "activo"}
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             onConfirm={handleModalConfirm}

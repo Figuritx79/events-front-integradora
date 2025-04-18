@@ -162,7 +162,7 @@ export default function CreateEventStep3 () {
             } finally {
               setIsSubmitting(false);
               onClose();
-              navigate('/AdminEvents/CreateEvent/Workshops');
+              navigate('/AdminEvents/CreateEvent/Workshops', { replace: true });
             }
           };
   

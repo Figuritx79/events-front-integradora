@@ -100,7 +100,7 @@ export default function CreateEventStep1() {
                     eventId: response.data.id,
                     newEvent: true
                 }
-            });
+            }, { replace: true });
         }
     
       } catch (error) {

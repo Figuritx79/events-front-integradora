@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { getEvents } from '../../adminEvents/service/Events.service';
 import logo from '/icon.svg'
 import { User, House, Users, MapPinned } from "lucide-react";
-import { Link, useLocation } from 'react-router';
+import { Link, useLocation, useNavigate } from 'react-router';
 import {
   Tooltip,
   Listbox, 
@@ -18,6 +18,7 @@ import { Logout, Profile } from "../../global/components/Components";
 import ProfileDrawer from "../../adminEvents/components/ProfileDrawer";
 
 export default function Sidebar() {
+    const navigate = useNavigate(); // Agregar hook de navegación
     const location = useLocation(); 
     const { credentials } = useAuth();
     const [events, setEvents] = useState([]);
@@ -181,7 +182,8 @@ export default function Sidebar() {
                                 {
                                 events.map((event) => (
                                     <ListboxItem
-                                    key={event.name} // Usa un key único para cada elemento
+                                    onPress={() => navigate(`/AdminEvents/Event/${event.name}`)}
+                                    key={event.id} // Usa un key único para cada elemento
                                     className="text-sm"
                                     color="light"
                                     >

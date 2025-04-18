@@ -1,6 +1,7 @@
 import { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router';
 import { api } from '../../global/config/api';
+import { Toast } from '../../global/components/Toast';
 
 const AuthContext = createContext();
 
@@ -45,6 +46,11 @@ export const AuthProvider = ({ children }) => {
 				setCredentials({ email, role });
 				sessionStorage.setItem('role', role);
 				sessionStorage.setItem('email', email);
+				Toast({
+					color: "secondary",
+					title: "Bienvenido de vuelta",
+					description: "Bienvenido de vuelta al sistema"
+				});
 
 				return role;
 			}
