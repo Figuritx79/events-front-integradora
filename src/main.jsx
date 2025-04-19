@@ -111,8 +111,7 @@ createRoot(document.getElementById('root')).render(
 					</Route>
 
 					<Route path="/Admin" element={ <AdminPage/> } > {/* Falta ruta para admins (creo) */}
-						<Route index element={ <HomeAdmin/> } />
-						<Route path="Users" element={ <UsersAdmin/> } />
+						<Route index element={ <UsersAdmin/> } />
 					</Route>
 
 					<Route path="/User" element={ <UserPage/> } >

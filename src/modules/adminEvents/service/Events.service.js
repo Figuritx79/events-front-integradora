@@ -44,6 +44,16 @@ export const changeStatus = async (id) => {
 	}
 };	
 
+export const getUsersListByEvent = async (id) => {
+	console.log(id)
+	try {
+		const response = await api.get(`/registration/all/${id}`);
+		return response.status === 200 || response.status === 201 ? response.data : false;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+};	
 
 export const getEventByName = async (name) => {
 	console.log(name)

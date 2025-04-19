@@ -13,6 +13,7 @@ import { ButtonX, Spinner } from "../../global/components/Components";
 import { changeStatus } from "../../auth/service/user.service";
 import { useAuth } from '../../auth/providers/AuthProvider';
 import { Toast } from "../../global/components/Toast";
+import { updateAdmin, updateProfile } from "../../adminEvents/service/AdminEvent.service";
 
 const UsersModal = ({ 
     isOpen, 
@@ -43,7 +44,23 @@ const UsersModal = ({
             let errorMessage;
             let description;
 
-            if (action === "status") {
+            if (action === "create") {
+                result = await createChecker(credentials.email, data);
+                successMessage = "Se registró el administrador";
+                description = "Se ha registrado el administrador correctamente"
+                errorMessage = "No se pudo registrar el administrador";
+              } 
+              else if (action === "update") {
+                console.log(data)
+                result = await updateAdmin({
+                    currentEmail: email,
+                    user: data // Envía el objeto completo
+                });
+                successMessage = "Se actualizó el administrador";
+                description = "Se ha actualizado el administrador correctamente"
+                errorMessage = "No se pudo actualizar el administrador";
+            } 
+            else if (action === "status") {
                 result = await changeStatus(data.email);
                 successMessage = status 
                   ? "Se inhabilitó el administrador" 
@@ -104,8 +121,8 @@ const UsersModal = ({
           <div className="text-sm space-y-3 pb-6 text-start">
             <p className="font-semibold">Nombre: <span className="font-normal break-words">{data.name + " " + data.lastname}</span></p>
             <p className="font-semibold">Correo: <span className="font-normal break-words">{data.email}</span></p>
-            <p className="font-semibold">Empresa: <span className="font-normal break-words">{data.companyName}</span></p>
             <p className="font-semibold">Teléfono: <span className="font-normal break-words">{data.phone}</span></p>
+            <p className="font-semibold">Empresa: <span className="font-normal break-words">{data.companyName}</span></p>
             {action === "status" && (
               <p className="font-semibold">Estado actual: <span className="font-normal">{status ? "Activo" : "Inactivo"}</span></p>
             )}

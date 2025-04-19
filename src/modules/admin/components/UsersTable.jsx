@@ -236,6 +236,17 @@ export default function UsersTable () {
                     <Eye aria-label="Checker icon detalles" strokeWidth={2} className="w-5 h-5"/>
                     </Button>
                 </Tooltip>
+                <Tooltip content="Actualizar" placement="top" className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark" aria-label="Tooltip editar">
+                    <Button
+                    aria-label="Button actualizar"
+                    isIconOnly
+                    size="sm"
+                    variant="light"
+                    color="primary"
+                    onPress={() => handleOpenUpdate(user)}>
+                    <UserPen aria-label="Checker icon actualizar" strokeWidth={2} className="w-5 h-5"/>
+                    </Button>
+                </Tooltip>
                 </div>
                 );
             default:
@@ -340,6 +351,18 @@ export default function UsersTable () {
                                 </SelectItem>
                             ))}
                         </Select>
+
+                        {/**<Button 
+                            aria-label="Button registrar"
+                            onPress={handleOpenCreate}
+                            className="font-bold"
+                            size="md"
+                            radius="md"
+                            variant="ghost"
+                            color="primary"
+                            startContent={<UserPlus strokeWidth={2} className="w-5 h-5"/>}>
+                            Registrar administrador
+                        </Button> */}
                     </div>
                 </div>
             </div>

@@ -75,8 +75,8 @@ const UsersDrawer = ({
 
     const actionConfig = {
         create: {
-            title: "Registrar checador",
-            description: "Puede agregar nuevos checadores en cualquier momento.",
+            title: "Registrar administrador",
+            description: "Puede agregar nuevos administradores en cualquier momento.",
             icon: <UserPlus strokeWidth={2} className="w-5 h-5" />,
             buttonLabel: "Registrar",
             placeholders: {
@@ -88,15 +88,16 @@ const UsersDrawer = ({
             }
         },
         update: {
-            title: "Actualizar checador",
-            description: "Puede modificar todos los checadores existentes de la tabla.",
+            title: "Actualizar administrador",
+            description: "Puede modificar todos los administradores existentes de la tabla.",
             icon: <UserPen strokeWidth={2} className="w-5 h-5" />,
             buttonLabel: "Actualizar",
             placeholders: {
                 name: data.name || "Nombre actual",
                 lastname: data.lastname || "Apellido actual",
                 email: data.email || "Correo actual",
-                phone: data.phone || "Teléfono actual"
+                phone: data.phone || "Teléfono actual",
+                companyName: data.companyName || "Empresa actual"
             }
         },
         read: {

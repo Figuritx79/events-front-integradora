@@ -1,22 +1,25 @@
 import React, { useState, useEffect } from "react";
 import { getEvents } from '../../adminEvents/service/Events.service';
 import logo from '/icon.svg'
-import { CircleUser, House, Users, MapPinned } from "lucide-react";
-import { Link } from 'react-router';
+import { User, House, Users, MapPinned } from "lucide-react";
+import { Link, useLocation, useNavigate } from 'react-router';
 import {
   Tooltip,
   Listbox, 
   ListboxItem,
   ListboxSection,
   Divider,
-  Image
+  Image,
+  Button
 } from "@heroui/react";
 import { useAuth } from '../../auth/providers/AuthProvider';
 import { getUser } from "../../auth/service/user.service";
-import { Logout } from "../../global/components/Components";
+import { Logout, Profile } from "../../global/components/Components";
 import ProfileDrawer from "../../adminEvents/components/ProfileDrawer";
 
 export default function Sidebar() {
+    const navigate = useNavigate(); // Agregar hook de navegación
+    const location = useLocation(); 
     const { credentials } = useAuth();
     const [user, setUser] = useState({});
     const [loading, setLoading] = useState(true);
@@ -51,54 +54,48 @@ export default function Sidebar() {
 
     return (
         <>
-            <div className="hidden rounded-r-3xl lg:flex w-[80px] h-full flex flex-col justify-between shadow-xl text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 dark:dark dark:border-bg-900 dark:border ">
-                <div className="justify-center flex">
-                    <Listbox aria-label="Menu" className="">
-                                            <ListboxSection className="px-2 text-text-50 dark:text-text-950">
-                                                <ListboxItem
-                                                as={Link}
-                                                to="/" viewTransition
-                                                key="UpEvent"
-                                                href=""
-                                                className=""
-                                                color="light"
-                                                >
-                                                    <div className="flex items-center pt-4">
-                                                        <img src={logo} alt="" className="w-7 h-7"/>
-                                                    </div>
-                    
-                                                </ListboxItem>
-                                            </ListboxSection>
-                                            <ListboxSection title="" className="text-xs px-2 pt-2 text-text-50 dark:text-text-950">
-                                                <ListboxItem
-                                                as={Link}
-                                                to="/AdminEvents" viewTransition
-                                                key="Inicio"
-                                                href=""
-                                                className=""
-                                                color="light"
-                                                >
-                                                    <div className="flex items-center py-[2px]">
-                                                        <House strokeWidth={2.5} className="w-5 h-5"/>
-                                                    </div>
-                                                </ListboxItem>
-                                                <ListboxItem
-                                                onPress={() => setIsDrawerOpen(true)}
-                                                key="Perfil"
-                                                href=""
-                                                className=""
-                                                color="light"
-                                                >
-                                                    <div className="flex items-center py-[2px]">
-                                                        <CircleUser strokeWidth={2.5} className="w-5 h-5"/>
-                                                    </div>
-                                                </ListboxItem>
-                                                </ListboxSection>
-                                                </Listbox>
+            <div className="hidden rounded-r-3xl lg:flex w-[75px] h-full flex flex-col justify-between shadow-xl text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950 dark:dark dark:border-bg-900 dark:border ">
+                <div className="items-center flex flex-col">
+                    <div className="flex items-center p-4">
+                        <img src={logo} alt="" className="w-8 h-8"/>
+                    </div>
+
+                    <div className="flex items-center">
+                    <Listbox aria-label="Menu" className="px-2">
+                        <ListboxSection>
+                            <ListboxItem
+                            as={Link}
+                            to="/User" viewTransition
+                            key="Inicio"
+                            href=""
+                            className=""
+                            color="light"
+                            >
+                                <div className="flex items-center ">
+                                    <Button
+                                        isIconOnly
+                                        fullWidth
+                                        aria-label="Button Inicio"
+                                        size="md"
+                                        radius="sm"
+                                        variant="flat"
+                                        color={location.pathname === "/User" ? "primary" : ""}
+                                        className={location.pathname === "/User" ? "" : "text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900"}>
+                                        <House strokeWidth={2} className="w-5 h-5"/>                                    
+                                    </Button>
+                                </div>
+                            </ListboxItem>
+                        </ListboxSection>
+                    </Listbox>
+                    </div>
                 </div>
+
                 <div className="pt-6 pb-5 px-4 text-text-50 dark:text-text-950">
                     <Divider className="my-4"/>
-                    <Logout isIconO={true}/>
+                    <div className="flex-col flex gap-4">
+                    <Profile isIconO onPress={() => setIsDrawerOpen(true)}/>
+                    <Logout isIconO/>
+                    </div>
                 </div>
             </div>
 
