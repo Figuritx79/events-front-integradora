@@ -1,7 +1,7 @@
+import UsersTable from "../components/UsersTable";
 
-
-function Users () {
-
+export default function Users () {
+  return (
+    <UsersTable/>
+  );
 }
-
-export default Users;

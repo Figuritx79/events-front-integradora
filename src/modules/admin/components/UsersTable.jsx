@@ -1,46 +1,46 @@
 import React, { useState, useEffect } from "react";
-import { getEvents } from '../service/Events.service';
-import { Search, CirclePlus, Eye, Pen, CircleCheck, CircleX } from "lucide-react";
+import { Search, UserPlus, Eye, UserPen, UserCheck, UserX } from "lucide-react";
 import {
-  Select, 
-  SelectItem,
-  Tooltip,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Input,
-  Button,
-  Pagination,
-  Skeleton
+    Select, 
+    SelectItem,
+    Tooltip,
+    Table,
+    TableHeader,
+    TableColumn,
+    TableBody,
+    TableRow,
+    TableCell,
+    Input,
+    Button,
+    Pagination,
+    Skeleton
 } from "@heroui/react";
-import EventsDrawer from "./EventsDrawer";
-import EventsModal from "./EventsModal"
+import UsersDrawer from "./UsersDrawer";
 import { useAuth } from '../../auth/providers/AuthProvider';
-import { Link, useNavigate } from "react-router";
+import UsersModal from "./UsersModal"
 import { Spinner } from "../../global/components/Components";
+import { getEventsAdmin } from "../../auth/service/user.service";
 
-export default function EventsTable () {
-    const navigate = useNavigate(); // Agregar hook de navegación
-	const { credentials } = useAuth();
+export default function UsersTable () {
+    const { credentials } = useAuth();
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [drawerAction, setDrawerAction] = useState("create"); // "create", "update", "read"
-    const [selectedEvent, setSelectedEvent] = useState({});
-    const [events, setEvents] = useState([]);
+    const [selectedUser, setSelectedUser] = useState({});
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [refreshTrigger, setRefreshTrigger] = useState(false);
 
-    const INITIAL_VISIBLE_COLUMNS = ["indice", "name", "startDate", "endDate", "status", "actions"];
+    const INITIAL_VISIBLE_COLUMNS = ["indice", "name", "companyName", "lastname", "phone", "status", "email", "actions"];
 
     const columns = [
         {name: "Índice", uid: "indice", sortable: true},
+        {name: "Correo", uid: "email", sortable: true},
         {name: "Nombre", uid: "name", sortable: true},
-        {name: "Inicio", uid: "startDate"},
-        {name: "Fin", uid: "endDate"},
+        {name: "Apellido", uid: "lastname", sortable: true},
+        {name: "Teléfono", uid: "phone", sortable: true},
+        {name: "Empresa", uid: "companyName", sortable: true},
         {name: "Status", uid: "status"},
         {name: "Acciones", uid: "actions"},
     ];    
@@ -57,16 +57,14 @@ export default function EventsTable () {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const data = await getEvents(credentials.email);
-                console.log(credentials.email)
-                console.log(data)
+                const data = await getEventsAdmin();
                 if (data) {
-                    const dataCount = data.result.map((event, index) => ({
-                        ...event,
+                    const dataCount = data.result.map((user, index) => ({
+                        ...user,
                         indice: index + 1,
-                        status: event.status ? "activo" : "inactivo"
+                        status: user.status ? "activo" : "inactivo"
                     }));
-                    setEvents(dataCount);
+                    setUsers(dataCount);
                     console.log(data)
                 } else {
                     setError("No se pudieron obtener los datos");
@@ -83,25 +81,25 @@ export default function EventsTable () {
     // Manejadores para abrir el drawer con diferentes acciones
     const handleOpenCreate = () => {
         setDrawerAction("create");
-        setSelectedEvent({});
+        setSelectedUser({});
         setIsDrawerOpen(true);
     };
 
-    const handleOpenUpdate = (event) => {
+    const handleOpenUpdate = (user) => {
         setDrawerAction("update");
-        setSelectedEvent(event);
+        setSelectedUser(user);
         setIsDrawerOpen(true);
     };
 
-    const handleOpenRead = (event) => {
+    const handleOpenRead = (user) => {
         setDrawerAction("read");
-        setSelectedEvent(event);
+        setSelectedUser(user);
         setIsDrawerOpen(true);
     };
 
-    const handleOpen = (event) => {
+    const handleOpen = (user) => {
         console.log("Acción confirmada");
-        setSelectedEvent(event);
+        setSelectedUser(user);
         setIsModalOpen(true); 
     };
 
@@ -114,13 +112,13 @@ export default function EventsTable () {
     const handleDrawerConfirm = ({ action, data }) => {
         if (action === "create") {
             // Lógica para crear un nuevo usuario
-            console.log("Crear evento:", data);
+            console.log("Crear usuario:", data);
         } else if (action === "update") {
             // Lógica para actualizar un usuario existente
-            console.log("Actualizar evento:", data);
+            console.log("Actualizar usuario:", data);
         }
-        setRefreshTrigger(prev => !prev); // ¡Invierte el valor para disparar el efecto!
         // Cerrar el drawer después de la acción
+        setRefreshTrigger(prev => !prev); // ¡Invierte el valor para disparar el efecto!
         setIsDrawerOpen(false);
     };
     
@@ -150,21 +148,21 @@ export default function EventsTable () {
     }, [visibleColumns]);
     
     const filteredItems = React.useMemo(() => {
-        let filteredEvents = [...events];
+        let filteredUsers = [...users];
     
         if (hasSearchFilter) {
-          filteredEvents = filteredEvents.filter((event) =>
-            event.name.toLowerCase().includes(filterValue.toLowerCase()),
+          filteredUsers = filteredUsers.filter((user) =>
+            user.name.toLowerCase().includes(filterValue.toLowerCase()),
           );
         }
         if (statusFilter !== "all" && Array.from(statusFilter).length !== statusOptions.length) {
-          filteredEvents = filteredEvents.filter((event) =>
-            Array.from(statusFilter).includes(event.status),
+          filteredUsers = filteredUsers.filter((user) =>
+            Array.from(statusFilter).includes(user.status),
           );
         }
     
-        return filteredEvents;
-    }, [events, filterValue, statusFilter]);
+        return filteredUsers;
+    }, [users, filterValue, statusFilter]);
 
     const pages = Math.ceil(filteredItems.length / rowsPerPage);
     
@@ -185,8 +183,8 @@ export default function EventsTable () {
         });
     }, [sortDescriptor, items]);
     
-    const renderCell = React.useCallback((event, columnKey) => {
-        const cellValue = event[columnKey];
+    const renderCell = React.useCallback((user, columnKey) => {
+        const cellValue = user[columnKey];
 
         switch (columnKey) {
             case "indice": 
@@ -195,28 +193,32 @@ export default function EventsTable () {
                 );
             case "name":
                 return (
-                    <p className="line-clamp-1 break-words xl:max-w-[550px] md:max-w-[200px] sm:max-w-[100px]">{cellValue}</p>
+                    cellValue
+                );
+            case "email":
+                return (
+                    <p className="line-clamp-1 break-words xl:max-w-[300px] md:max-w-[150px] sm:max-w-[50px]">{cellValue}</p>
                 );
             case "status":
                 return (
                     <Tooltip 
                         aria-label="Tooltip status"
                         className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark"
-                        content={event.status === "activo" ? "¿Inhabilitar?" : "¿Habilitar?" }
+                        content={user.status === "activo" ? "¿Inhabilitar?" : "¿Habilitar?" }
                         placement="top">
                         <Button
                         aria-label="Button status"
+                        className="text-sm"
                         size="sm"
                         variant="light"
-                        className="text-sm"
-                        color={event.status === "activo" ? "success" : "danger" }
-                        startContent={event.status === "activo" ? (
-                            <CircleCheck aria-label="Event icon activo" strokeWidth={2} className="w-5 h-5"/>
+                        color={user.status === "activo" ? "success" : "danger" }
+                        startContent={user.status === "activo" ? (
+                            <UserCheck aria-label="Checker icon activo" strokeWidth={2} className="w-5 h-5"/>
                                 ) : (
-                            <CircleX aria-label="Event icon inactivo" strokeWidth={2} className="w-5 h-5"/>
+                            <UserX aria-label="Checker icon inactivo" strokeWidth={2} className="w-5 h-5"/>
                         )}
-                        onPress={() => handleOpen(event)}>
-                            {event.status}
+                        onPress={() => handleOpen(user)}>
+                            {user.status}
                         </Button>
                     </Tooltip>
                 );
@@ -230,21 +232,10 @@ export default function EventsTable () {
                     size="sm"
                     variant="light"
                     color="primary"
-                    onPress={() => navigate(`/AdminEvents/Event/${event.name}`)}>
-                    <Eye aria-label="Event icon detalles" strokeWidth={2} className="w-5 h-5"/>
+                    onPress={() => handleOpenRead(user)}>
+                    <Eye aria-label="Checker icon detalles" strokeWidth={2} className="w-5 h-5"/>
                     </Button>
                 </Tooltip>
-                {/**<Tooltip content="Actualizar" placement="top" className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark" aria-label="Tooltip editar">
-                    <Button
-                    aria-label="Button actualizar"
-                    isIconOnly
-                    size="sm"
-                    variant="light"
-                    color="primary"
-                    onPress={() => handleOpenUpdate(event)}>
-                    <Pen aria-label="Event icon actualizar" strokeWidth={2} className="w-5 h-5"/>
-                    </Button>
-                </Tooltip> */}
                 </div>
                 );
             default:
@@ -270,7 +261,7 @@ export default function EventsTable () {
         return (
             <div className="flex flex-col gap-4 pb-6 pt-6">
                 <div className="flex justify-between gap-3 items-end">
-                    <h1 className="text-4xl font-bold">Eventos</h1>
+                    <h1 className="text-4xl font-bold">Administradores</h1>
                     <div className="flex gap-3">
                         <Input
                             aria-label="Input busqueda"
@@ -349,19 +340,6 @@ export default function EventsTable () {
                                 </SelectItem>
                             ))}
                         </Select>
-
-                        <Button 
-                            aria-label="Button registrar"
-                            as={Link}
-                            to="/AdminEvents/CreateEvent"
-                            className="font-bold"
-                            size="md"
-                            radius="md"
-                            variant="ghost"
-                            color="primary"
-                            startContent={<CirclePlus strokeWidth={2} className="w-5 h-5"/>}>
-                            Registrar evento
-                        </Button>
                     </div>
                 </div>
             </div>
@@ -372,7 +350,7 @@ export default function EventsTable () {
         visibleColumns,
         onSearchChange,
         onRowsPerPageChange,
-        events.length,
+        users.length,
         hasSearchFilter,
     ]);
     
@@ -397,7 +375,7 @@ export default function EventsTable () {
                         ? "Todos seleccionados"
                         : `${selectedKeys.size} de ${items.length} seleccionados`}
                     </span> */}
-                    <span className="text-text-500 text-sm pr-6">Total: {events.length} eventos</span>
+                    <span className="text-text-500 text-sm pr-6">Total: {users.length} administradores de eventos</span>
                 </div>
             </div>
         );
@@ -428,7 +406,7 @@ export default function EventsTable () {
         
         <div className="h-full flex-1 lg:ml-12 xl:mx-20 py-6 shadow-xl rounded-3xl flex flex-col text-text-50 bg-bg-50 dark:text-text-950 dark:bg-bg-950">
             <div className="flex-1 min-h-0 overflow-hidden px-12">
-                <Table
+                <Table 
                     isHeaderSticky
                     aria-label="Table checkers"
                     bottomContent={bottomContent}
@@ -457,7 +435,7 @@ export default function EventsTable () {
                         isLoading={loading}
                         loadingContent={<Spinner/>}
                         className="bg-transparent" 
-                        emptyContent={ events.length === 0 ? "No tienes eventos por ahora" : "No se encontraron eventos :("} 
+                        emptyContent={ users.length === 0 ? "No hay administradores existentes por ahora" : "No se encontraron administradores :("} 
                         items={sortedItems}>
                         {(item) => (
                             <TableRow aria-label={item.indice} key={item.email}>
@@ -468,14 +446,23 @@ export default function EventsTable () {
                 </Table>
             </div>
         </div>
-        
-        <EventsModal
+
+        <UsersDrawer
+            action={drawerAction}
+            data={selectedUser}
+            isOpen={isDrawerOpen}
+            onOpenChange={setIsDrawerOpen}
+            onConfirm={handleDrawerConfirm}
+        />
+
+        <UsersModal
             action="status"
-            status={selectedEvent.status === "activo"}
+            status={selectedUser.status === "activo"}
             isOpen={isModalOpen}
             onClose={() => setIsModalOpen(false)}
             onConfirm={handleModalConfirm}
-            data={selectedEvent}
+            data={selectedUser}
+            email={selectedUser.email}
         />
 
         </>

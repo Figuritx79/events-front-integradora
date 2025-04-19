@@ -10,18 +10,18 @@ import {
     useDraggable, 
 } from "@heroui/react";
 import { ButtonX, Spinner } from "../../global/components/Components";
-import { changeStatus } from "../../adminEvents/service/Events.service";
-import { createChecker, updateChecker } from "../service/Checkers.service";
+import { changeStatus } from "../../auth/service/user.service";
 import { useAuth } from '../../auth/providers/AuthProvider';
 import { Toast } from "../../global/components/Toast";
 
-const EventsModal = ({ 
+const UsersModal = ({ 
     isOpen, 
     onClose, 
     onConfirm, 
     action,
     data = {},
-    status
+    status,
+    email
 }) => {
     console.log(data)
     const actionText = 
@@ -39,22 +39,21 @@ const EventsModal = ({
         setIsSubmitting(true);
         try {
             let result;
-            let successMessage;
+            let successMessage; 
             let errorMessage;
             let description;
-              
+
             if (action === "status") {
-                console.log(data.id)
-                result = await changeStatus(data.id);
+                result = await changeStatus(data.email);
                 successMessage = status 
-                  ? "Se inhabilitó el evento" 
-                  : "Se habilitó el evento";
+                  ? "Se inhabilitó el administrador" 
+                  : "Se habilitó el administrador";
                   description = status 
-                  ? "Se inhabilitó el evento correctamente" 
-                  : "Se habilitó el evento correctamente";
+                  ? "Se inhabilitó el administrador correctamente" 
+                  : "Se habilitó el administrador correctamente";
                 errorMessage = status 
-                  ? "No se pudo inhabilitar el evento" 
-                  : "No se pudo habilitar el evento";
+                  ? "No se pudo inhabilitar el administrador" 
+                  : "No se pudo habilitar el administrador";
               }
 
               if (result) {
@@ -76,7 +75,7 @@ const EventsModal = ({
               Toast({
                 onConfirm: () => onConfirm(false),
                 color: "danger",
-                title: `Error al ${actionText} el evento`,
+                title: `Error al ${actionText} el checador`,
                 description: error.message
               });
               console.error(error);
@@ -97,15 +96,16 @@ const EventsModal = ({
       className="text-text-50 bg-bg-50 dark:dark dark:text-text-950 dark:bg-bg-950">
       <ModalContent>
         <ModalHeader {...moveProps} className="place-content-between pt-10 pb-6 text-4xl">
-          <h1 className="text-xl font-bold">¿Desea {actionText} el siguiente evento?</h1>
+          <h1 className="text-xl font-bold">¿Desea {actionText} el siguiente administrador?</h1>
           <ButtonX onPress={onClose}></ButtonX>
         </ModalHeader>
         
         <ModalBody>
           <div className="text-sm space-y-3 pb-6 text-start">
-            <p className="font-semibold">Nombre: <span className="font-normal break-words">{data.name}</span></p>
-            <p className="font-semibold">Fecha inicial: <span className="font-normal break-words">{data.startDate}</span></p>
-            <p className="font-semibold">Fecha final: <span className="font-normal break-words">{data.endDate}</span></p>
+            <p className="font-semibold">Nombre: <span className="font-normal break-words">{data.name + " " + data.lastname}</span></p>
+            <p className="font-semibold">Correo: <span className="font-normal break-words">{data.email}</span></p>
+            <p className="font-semibold">Empresa: <span className="font-normal break-words">{data.companyName}</span></p>
+            <p className="font-semibold">Teléfono: <span className="font-normal break-words">{data.phone}</span></p>
             {action === "status" && (
               <p className="font-semibold">Estado actual: <span className="font-normal">{status ? "Activo" : "Inactivo"}</span></p>
             )}
@@ -149,4 +149,4 @@ const EventsModal = ({
     );
 };
 
-export default EventsModal;
+export default UsersModal;

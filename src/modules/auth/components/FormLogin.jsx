@@ -19,13 +19,6 @@ export const FormLogin = () => {
 	const { login } = useAuth();
 	const onSubmit = async (values) => {
 		setIsValidForm(true);
-		const validCredentials = partialUser({ user: values });
-		if (!validCredentials.success) {
-			setIsValidForm(!isValidForm);
-			setDescription('Por favor, ingresa datos validos');
-			setTitle('Datos Invalidos');
-			return;
-		}
 		setIsLoading(true);
 		const { email, password } = values;
 		const validAuth = await login({ email, password });

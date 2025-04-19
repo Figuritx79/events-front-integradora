@@ -19,7 +19,7 @@ const ProfileDrawer = ({
     onConfirm,
 }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-
+    console.log(data)
     const handleModalConfirm = () => {
         setIsModalOpen(false);
         onConfirm({ data: formData }); // Pasa los datos actualizados al padre
@@ -151,36 +151,40 @@ const ProfileDrawer = ({
                             isRequired
                             classNames={{ label: "font-bold" }}
                         />
+                        
+                        {data.role?.id === 2 && ( 
+                            <>
+                                <Input
+                                    className="w-full py-3"
+                                    size="md"
+                                    radius="md"
+                                    variant="bordered"
+                                    type="tel"
+                                    placeholder={data.phone}
+                                    label="Teléfono"
+                                    value={formData.phone}
+                                    onValueChange={(value) => handleInputChange('phone', value)}
+                                    labelPlacement="outside"
+                                    isRequired
+                                    classNames={{ label: "font-bold" }}
+                                />
 
-                        <Input
-                            className="w-full py-3"
-                            size="md"
-                            radius="md"
-                            variant="bordered"
-                            type="tel"
-                            placeholder={data.phone}
-                            label="Teléfono"
-                            value={formData.phone}
-                            onValueChange={(value) => handleInputChange('phone', value)}
-                            labelPlacement="outside"
-                            isRequired
-                            classNames={{ label: "font-bold" }}
-                        />
-
-                        <Input
-                            className="w-full py-3"
-                            size="md"
-                            radius="md"
-                            variant="bordered"
-                            type="text"
-                            placeholder={data.companyName}
-                            label="Nombre de la compañia"
-                            value={formData.companyName}
-                            onValueChange={(value) => handleInputChange('companyName', value)}
-                            labelPlacement="outside"
-                            isRequired
-                            classNames={{ label: "font-bold" }}
-                        />
+                                <Input
+                                    className="w-full py-3"
+                                    size="md"
+                                    radius="md"
+                                    variant="bordered"
+                                    type="text"
+                                    placeholder={data.companyName}
+                                    label="Nombre de la compañia"
+                                    value={formData.companyName}
+                                    onValueChange={(value) => handleInputChange('companyName', value)}
+                                    labelPlacement="outside"
+                                    isRequired
+                                    classNames={{ label: "font-bold" }}
+                                />
+                            </>
+                        )}
                     </div>
                     <div className="pt-4">
                         <ChangePassword isIconO={false}/>

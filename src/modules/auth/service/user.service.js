@@ -10,6 +10,16 @@ export const getUser = async (email) => {
 	}
 };	
 
+export const getEventsAdmin = async () => {
+	try {
+		const response = await api.get('/user/event-admins');
+		return response.status === 200 || response.status === 201 ? response.data : false;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+};	
+
 export const changeStatus = async (email) => {
 	try {
 		const response = await api.patch('/user/status', JSON.stringify({email}));
