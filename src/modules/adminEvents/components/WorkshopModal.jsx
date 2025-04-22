@@ -47,7 +47,8 @@ const WorkshopModal = ({
             let errorMessage;
             let description;
 
-            if (action === "create" && !workshopImage) {
+            if (action === "create") {
+              if (action === "create" && !workshopImage) {
                 throw new Error("Debes seleccionar una imagen");
             }
     
@@ -57,6 +58,7 @@ const WorkshopModal = ({
             }
 
             const workshopDto = {
+              id: data.id,
               name: data.name,
               speakerName: data.speakerName, // Campo directo
               capacity: data.capacity,
@@ -65,6 +67,7 @@ const WorkshopModal = ({
               event: data.event || sessionStorage.getItem('event') // Obtener evento
           };
           console.log("DTO a enviar:", {
+            id: data.id,
             name: data.name,
             speakerName: data.speakerName,
             event: data.event,
@@ -85,18 +88,33 @@ const WorkshopModal = ({
             console.log("Contenido de FormData:");
             formData.forEach((value, key) => console.log(key, value));
 
-            if (action === "create") {
                 result = await createWorkshop(formData);
                 successMessage = "Se registró el taller";
                 description = "Se ha registrado el taller correctamente"
                 errorMessage = "No se pudo registrar el taller";
               } 
               else if (action === "update") {
-                console.log(data)
-                result = await updateWorkshop(formData);
-                successMessage = "Se actualizó el taller";
-                description = "Se ha actualizado el taller correctamente"
-                errorMessage = "No se pudo actualizar el taller";
+                  console.log(data)
+
+                  if (workshopImage && !workshopImage.type.match(/image\/(jpeg|png)/)) {
+                    throw new Error("Formato de imagen no válido (solo JPG/PNG)");
+                  }
+                  if (workshopImage) {
+                    formData.append("workshopImage", workshopImage);
+                  }
+
+                  const dtoBlob = new Blob([JSON.stringify(data)], {
+                    type: 'application/json'
+                  });
+
+                  formData.append("workshop", dtoBlob)
+                  console.log("Contenido de FormData:");
+                  formData.forEach((value, key) => console.log(key, value));
+
+                  result = await updateWorkshop(formData);
+                  successMessage = "Se actualizó el taller";
+                  description = "Se ha actualizado el taller correctamente"
+                  errorMessage = "No se pudo actualizar el taller";
               } 
               else if (action === "status") {
                 result = await changeStatus(data.id);

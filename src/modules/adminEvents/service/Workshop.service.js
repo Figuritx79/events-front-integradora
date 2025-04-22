@@ -28,9 +28,10 @@ export const createWorkshop = async (formData) => {
 };	
 
 export const updateWorkshop = async (formData) => {
-    console.log(formData)
+	formData.forEach((value, key) => console.log(key, value));
+
     try {
-        const response = await api.post('/event/event', formData, {
+        const response = await api.put('/workshop/workshop/update', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
                 }

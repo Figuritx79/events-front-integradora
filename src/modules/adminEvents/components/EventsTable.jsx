@@ -234,17 +234,17 @@ export default function EventsTable () {
                     <Eye aria-label="Event icon detalles" strokeWidth={2} className="w-5 h-5"/>
                     </Button>
                 </Tooltip>
-                {/**<Tooltip content="Actualizar" placement="top" className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark" aria-label="Tooltip editar">
+                <Tooltip content="Actualizar" placement="top" className="text-text-50 bg-bg-100 dark:text-text-950 dark:bg-bg-900 dark:dark" aria-label="Tooltip editar">
                     <Button
                     aria-label="Button actualizar"
                     isIconOnly
                     size="sm"
                     variant="light"
                     color="primary"
-                    onPress={() => handleOpenUpdate(event)}>
-                    <Pen aria-label="Event icon actualizar" strokeWidth={2} className="w-5 h-5"/>
+                    onPress={() => navigate(`/AdminEvents/EditEvent/${event.name}`)}>
+                        <Pen aria-label="Event icon actualizar" strokeWidth={2} className="w-5 h-5"/>
                     </Button>
-                </Tooltip> */}
+                </Tooltip>
                 </div>
                 );
             default:

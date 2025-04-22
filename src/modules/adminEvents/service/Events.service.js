@@ -12,6 +12,22 @@ export const getEvents = async (email) => {
 	}
 };	
 
+export const updateEvent = async (formData) => {
+	formData.forEach((value, key) => console.log(key, value));
+
+    try {
+        const response = await api.put("/event/events-update", formData, {
+			headers: {
+				'Content-Type': 'multipart/form-data'
+			}
+		});
+        return response.status === 200 || response.status === 201 ? response.data : false;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+};	
+
 export const inscribeToEvent = async (email) => {
 	console.log(email)
 	try {
@@ -160,6 +176,18 @@ export const assignChecker = async (assignedBy, checkers, idEvent) => {
 		}
 };	
 
+export const reassignChecker = async (list) => {
+	console.log(list)
+	try {
+		const response = await api.post('/checker/reassign', list);
+
+		return response.status === 200 || response.status === 201 ? response.data : false;
+	} catch (error) {
+		console.error(error);
+		return false;
+	}
+};	
+
 
 export const createLandingPage = async ({formData, eventName}) => {
     console.log(formData)
@@ -170,6 +198,22 @@ export const createLandingPage = async ({formData, eventName}) => {
                     'Content-Type': 'multipart/form-data'
                 }
             });
+        return response.status === 200 || response.status === 201 ? response.data : false;
+    } catch (error) {
+        console.error(error);
+        return false;
+    }
+};	
+
+export const updateLanding = async (formData) => {
+	formData.forEach((value, key) => console.log(key, value));
+
+    try {
+        const response = await api.put("/landing-page/landing/update", formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
         return response.status === 200 || response.status === 201 ? response.data : false;
     } catch (error) {
         console.error(error);

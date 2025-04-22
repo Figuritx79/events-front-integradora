@@ -180,7 +180,10 @@ export default function Sidebar() {
                             className="">
                                 <ListboxSection title="">
                                 {
-                                events.map((event) => (
+                                events.map((event) => {
+                                    const isActive = decodeURIComponent(location.pathname).includes(event.name);
+
+                                    return (
                                     <ListboxItem
                                     onPress={() => navigate(`/AdminEvents/Event/${event.name}`)}
                                     key={event.id} // Usa un key único para cada elemento
@@ -220,13 +223,18 @@ export default function Sidebar() {
                                                     className="object-cover rounded-md shadow-xl"
                                                 />
                                                 </div>
-                                                <p className="font-bold line-clamp-1 break-words w-[150px]">
-                                                {event.name}
+                                                <p
+                                                    className={`font-bold line-clamp-1 break-words w-[150px] ${
+                                                    isActive ? "text-primary" : ""
+                                                    }`}
+                                                >
+                                                    {event.name}
                                                 </p>
                                             </div>
                                         </Tooltip>
                                     </ListboxItem>
-                                ))}
+                                    );
+                                    })}
                                 </ListboxSection>
                             </Listbox>
                         }

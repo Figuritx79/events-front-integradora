@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { UserX, X, UserCheck, UserPlus, UserPen } from "lucide-react";
+import { CircleX, X, CircleCheck, UserPlus, Pen } from "lucide-react";
 import { 
     Button, 
     Modal,
@@ -136,8 +136,8 @@ const EventsModal = ({
             startContent={
               isSubmitting ? null : 
               action === "create" ? <UserPlus strokeWidth={2} className="w-5 h-5" /> : 
-              action === "status" ? (status ? <UserX strokeWidth={2} className="w-5 h-5" /> : <UserCheck strokeWidth={2} className="w-5 h-5" />) :
-              <UserPen strokeWidth={2} className="w-5 h-5" />
+              action === "status" ? (status ? <CircleX strokeWidth={2} className="w-5 h-5" /> : <CircleCheck strokeWidth={2} className="w-5 h-5" />) :
+              <Pen strokeWidth={2} className="w-5 h-5" />
             }>
             {action === "create" ? "Registrar" : 
              action === "status" ? (status ? "Inhabilitar" : "Habilitar") : 

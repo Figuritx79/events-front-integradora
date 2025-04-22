@@ -36,7 +36,8 @@ import CreateEventStep2 from './modules/adminEvents/pages/CreateEventStep2.jsx';
 import CreateEventStep3 from './modules/adminEvents/pages/CreateEventStep3.jsx';
 import CreateEventStep4 from './modules/adminEvents/pages/CreateEventStep4.jsx';
 import CheckersAdminEvents from './modules/adminEvents/pages/Checkers.jsx';
-import Event from "./modules/adminEvents/pages/Event.jsx"
+import Event from "./modules/adminEvents/pages/Event.jsx" 
+import EditEvent from "./modules/adminEvents/pages/EditEvent.jsx" 
 
 import AdminPage from './modules/admin/pages/AdminPage.jsx';
 import HomeAdmin from './modules/admin/pages/Home.jsx';
@@ -106,6 +107,7 @@ createRoot(document.getElementById('root')).render(
 							<Route path="Workshops" element={<CreateEventStep4/>} />
 						</Route>
 						<Route path="Event/:eventName" element={<Event/>} />
+						<Route path="EditEvent/:eventName" element={<EditEvent/>} />
 						<Route path="Events" element={<EventsAdminEvents/>} />
 						<Route path="Checkers" element={<CheckersAdminEvents/>} />
 					</Route>
